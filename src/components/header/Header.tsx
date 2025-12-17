@@ -1,5 +1,5 @@
-import StatusBar from "./StatusBar";
-import Navigation from "./Navigation";
+import StatusBar from './StatusBar';
+import Navigation from './Navigation';
 
 const Header = () => {
   return (
