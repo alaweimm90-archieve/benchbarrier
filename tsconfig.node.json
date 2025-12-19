@@ -12,7 +12,6 @@
     "isolatedModules": true,
     "moduleDetection": "force",
 
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": false,
@@ -21,5 +20,3 @@
   },
   "include": ["vite.config.ts"]
 }
-
-
