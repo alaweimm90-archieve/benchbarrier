@@ -2,7 +2,27 @@
 
 A world-class, luxury fitness website built with modern web technologies, featuring comprehensive marketing automation, SEO optimization, and premium user experience.
 
-## 🚀 Tech Stack
+## 🚀 Quick Deploy to Netlify
+
+**Already connected to Netlify?** Deploy in 30 seconds:
+
+```bash
+# Option 1: Automated script
+./deploy-netlify.sh
+
+# Option 2: Netlify CLI
+npm run build
+netlify deploy --prod
+
+# Option 3: Drag & Drop
+# Build, then drag 'dist' folder to https://app.netlify.com/drop
+```
+
+📚 **Full deployment guide:** [DEPLOY_NOW.md](./DEPLOY_NOW.md) | [NETLIFY_DEPLOYMENT.md](./NETLIFY_DEPLOYMENT.md)
+
+---
+
+## 🛠️ Tech Stack
 
 - **Framework**: React 18 + TypeScript
 - **Build Tool**: Vite
