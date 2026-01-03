@@ -2,8 +2,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
+import { useEffect } from 'react';
+import { initGA, logPageView } from './lib/analytics';
+import { SkipToContent } from './components/accessibility/SkipToContent';
+import { FocusManager } from './components/accessibility/FocusManager';
+import { CookieConsent } from './components/security/CookieConsent';
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -25,6 +30,25 @@ import Loyalty from "./pages/Loyalty";
 
 const queryClient = new QueryClient();
 
+// Initialize Google Analytics (replace with your actual GA4 Measurement ID)
+const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+if (GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX') {
+  initGA(GA_MEASUREMENT_ID);
+}
+
+// Component to track page views
+const AnalyticsTracker = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX') {
+      logPageView(location.pathname + location.search, document.title);
+    }
+  }, [location]);
+
+  return null;
+};
+
 const App = () => (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
@@ -32,6 +56,10 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <SkipToContent />
+          <FocusManager />
+          <AnalyticsTracker />
+          <CookieConsent />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/lead-magnet" element={<LeadMagnet />} />

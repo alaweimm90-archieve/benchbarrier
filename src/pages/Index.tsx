@@ -22,7 +22,7 @@ const Index = () => {
       <ScrollProgress />
       <GlassmorphNav />
       
-      <main>
+      <main id="main-content" tabIndex={-1} className="focus:outline-none">
         <CinematicHero />
         <ServicesShowcase />
         <TestimonialsSection />
