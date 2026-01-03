@@ -38,6 +38,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import LinkInBio from "./pages/LinkInBio";
 import GMBOptimization from "./pages/GMBOptimization";
 import ReviewGeneration from "./pages/ReviewGeneration";
+import SystemDashboard from "./pages/SystemDashboard";
 
 const queryClient = new QueryClient();
 
@@ -101,6 +102,7 @@ const App = () => (
               <Route path="/links" element={<LinkInBio />} />
               <Route path="/gmb" element={<GMBOptimization />} />
               <Route path="/reviews" element={<ReviewGeneration />} />
+              <Route path="/system-dashboard" element={<SystemDashboard />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="*" element={<NotFound />} />
