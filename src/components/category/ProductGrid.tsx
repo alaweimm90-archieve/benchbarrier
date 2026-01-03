@@ -191,6 +191,13 @@ const products: Product[] = [
     price: "€3,750",
     image: shadowlineImage,
   },
+  {
+    id: 25,
+    name: "Spark",
+    category: "Earrings",
+    price: "€1,850",
+    image: haloImage,
+  },
 ];
 
 const ProductGrid = () => {
