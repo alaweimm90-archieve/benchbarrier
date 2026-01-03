@@ -14,6 +14,10 @@ import Comparison from "./pages/Comparison";
 import Referral from "./pages/Referral";
 import SuccessStories from "./pages/SuccessStories";
 import Partnerships from "./pages/Partnerships";
+import UGCSubmission from "./pages/UGCSubmission";
+import Contest from "./pages/Contest";
+import Ambassador from "./pages/Ambassador";
+import ShareableContent from "./pages/ShareableContent";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +36,10 @@ const App = () => (
             <Route path="/referral" element={<Referral />} />
             <Route path="/success-stories" element={<SuccessStories />} />
             <Route path="/partnerships" element={<Partnerships />} />
+            <Route path="/submit-content" element={<UGCSubmission />} />
+            <Route path="/contest" element={<Contest />} />
+            <Route path="/ambassador" element={<Ambassador />} />
+            <Route path="/create-content" element={<ShareableContent />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="*" element={<NotFound />} />

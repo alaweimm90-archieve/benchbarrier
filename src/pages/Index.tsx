@@ -11,6 +11,7 @@ import LuxuryFooter from "../components/sections/LuxuryFooter";
 import ScrollProgress from "../components/shared/ScrollProgress";
 import LoadingAnimation from "../components/shared/LoadingAnimation";
 import { SEOHead } from "@/components/seo/SEOHead";
+import { LiveVisitorCounter, RecentSignupsTicker } from "../components/social/SocialProofWidgets";
 
 const Index = () => {
   return (
@@ -31,6 +32,8 @@ const Index = () => {
         <InstagramWall />
       </main>
       
+      <LiveVisitorCounter />
+      <RecentSignupsTicker />
       <LuxuryFooter />
     </div>
   );
