@@ -11,6 +11,7 @@ import { SkipToContent } from './components/accessibility/SkipToContent';
 import { FocusManager } from './components/accessibility/FocusManager';
 import { CookieConsent } from './components/security/CookieConsent';
 import { ErrorBoundary } from './components/shared/ErrorBoundary';
+import { FreeShippingBanner } from './components/shared/FreeShippingBanner';
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -73,6 +74,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <FreeShippingBanner />
             <SkipToContent />
             <FocusManager />
             <AnalyticsTracker />

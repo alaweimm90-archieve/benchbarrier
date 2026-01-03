@@ -85,6 +85,14 @@ const LuxuryFooter = () => {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  to="/admin"
+                  className="text-text-muted hover:text-primary transition-colors text-sm opacity-50 hover:opacity-100"
+                >
+                  Admin
+                </Link>
+              </li>
             </ul>
           </div>
 

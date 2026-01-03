@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -106,69 +113,68 @@ const GlassmorphNav = () => {
               </Button>
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-white hover:text-primary transition-colors"
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            {/* Mobile Menu - Sheet Component */}
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild className="md:hidden">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-white hover:text-primary hover:bg-transparent"
+                >
+                  <Menu size={24} />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent 
+                side="right" 
+                className="w-[300px] sm:w-[400px] bg-deep-black/95 backdrop-blur-xl border-primary/20"
+              >
+                <SheetHeader>
+                  <SheetTitle className="text-left">
+                    <span className="text-2xl font-serif font-bold">
+                      <span className="text-white">Bench</span>
+                      <span className="gold-gradient-text">Barrier</span>
+                    </span>
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col gap-6 mt-8">
+                  {navLinks.map((link) => (
+                    <div key={link.name}>
+                      {link.path.startsWith('#') ? (
+                        <button
+                          onClick={() => {
+                            handleNavClick(link.path);
+                            setIsMobileMenuOpen(false);
+                          }}
+                          className="text-xl font-serif font-semibold text-white hover:text-primary transition-colors duration-300 w-full text-left"
+                        >
+                          {link.name}
+                        </button>
+                      ) : (
+                        <Link
+                          to={link.path}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="text-xl font-serif font-semibold text-white hover:text-primary transition-colors duration-300 block"
+                        >
+                          {link.name}
+                        </Link>
+                      )}
+                    </div>
+                  ))}
+                  <div className="mt-4">
+                    <Button
+                      className="w-full bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-6 text-lg rounded-full font-semibold"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Get Started
+                    </Button>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </motion.nav>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="fixed inset-0 z-40 md:hidden"
-          >
-            <div className="absolute inset-0 bg-deep-black/95 backdrop-blur-xl" />
-            <div className="relative h-full flex flex-col items-center justify-center gap-8 p-8">
-              {navLinks.map((link, index) => (
-                <motion.div
-                  key={link.name}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                >
-                  {link.path.startsWith('#') ? (
-                    <button
-                      onClick={() => handleNavClick(link.path)}
-                      className="text-3xl font-serif font-bold text-white hover:text-primary transition-colors duration-300"
-                    >
-                      {link.name}
-                    </button>
-                  ) : (
-                    <Link
-                      to={link.path}
-                      className="text-3xl font-serif font-bold text-white hover:text-primary transition-colors duration-300"
-                    >
-                      {link.name}
-                    </Link>
-                  )}
-                </motion.div>
-              ))}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: navLinks.length * 0.1 }}
-              >
-                <Button
-                  size="lg"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 text-lg rounded-full font-semibold"
-                >
-                  Get Started
-                </Button>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 };
