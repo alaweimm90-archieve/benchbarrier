@@ -34,6 +34,9 @@ import Resources from "./pages/Resources";
 import Payment from "./pages/Payment";
 import MemberPortal from "./pages/MemberPortal";
 import AdminDashboard from "./pages/AdminDashboard";
+import LinkInBio from "./pages/LinkInBio";
+import GMBOptimization from "./pages/GMBOptimization";
+import ReviewGeneration from "./pages/ReviewGeneration";
 
 const queryClient = new QueryClient();
 
@@ -93,6 +96,9 @@ const App = () => (
             <Route path="/payment" element={<Payment />} />
             <Route path="/member-portal" element={<MemberPortal />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/links" element={<LinkInBio />} />
+            <Route path="/gmb" element={<GMBOptimization />} />
+            <Route path="/reviews" element={<ReviewGeneration />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="*" element={<NotFound />} />

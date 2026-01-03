@@ -110,3 +110,5 @@ export const SEOHead = ({
     </Helmet>
   );
 };
+
+export default SEOHead;

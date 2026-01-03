@@ -106,3 +106,14 @@ export const logScrollDepth = (depth: number) => {
 export const logTimeOnPage = (seconds: number) => {
   logEvent('Engagement', 'Time on Page', `${seconds}s`, seconds);
 };
+
+// Generic event tracker (alias for logEvent)
+export const trackEvent = (action: string, params?: Record<string, any>) => {
+  ReactGA.event({
+    category: params?.category || 'General',
+    action,
+    label: params?.label,
+    value: params?.value,
+    ...params
+  });
+};
