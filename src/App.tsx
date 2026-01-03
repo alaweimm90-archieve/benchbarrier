@@ -10,6 +10,7 @@ import { registerServiceWorker, initPWAInstallPrompt } from './lib/pwa';
 import { SkipToContent } from './components/accessibility/SkipToContent';
 import { FocusManager } from './components/accessibility/FocusManager';
 import { CookieConsent } from './components/security/CookieConsent';
+import { ErrorBoundary } from './components/shared/ErrorBoundary';
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -64,49 +65,51 @@ const AnalyticsTracker = () => {
 };
 
 const App = () => (
-  <HelmetProvider>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <SkipToContent />
-          <FocusManager />
-          <AnalyticsTracker />
-          <CookieConsent />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/lead-magnet" element={<LeadMagnet />} />
-            <Route path="/quiz" element={<Quiz />} />
-            <Route path="/comparison" element={<Comparison />} />
-            <Route path="/referral" element={<Referral />} />
-            <Route path="/success-stories" element={<SuccessStories />} />
-            <Route path="/partnerships" element={<Partnerships />} />
-            <Route path="/submit-content" element={<UGCSubmission />} />
-            <Route path="/contest" element={<Contest />} />
-            <Route path="/ambassador" element={<Ambassador />} />
-            <Route path="/create-content" element={<ShareableContent />} />
-            <Route path="/booking" element={<Booking />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/waitlist" element={<Waitlist />} />
-            <Route path="/loyalty" element={<Loyalty />} />
-            <Route path="/blog-cms" element={<BlogCMS />} />
-            <Route path="/newsletter" element={<Newsletter />} />
-            <Route path="/resources" element={<Resources />} />
-            <Route path="/payment" element={<Payment />} />
-            <Route path="/member-portal" element={<MemberPortal />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/links" element={<LinkInBio />} />
-            <Route path="/gmb" element={<GMBOptimization />} />
-            <Route path="/reviews" element={<ReviewGeneration />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/terms" element={<TermsOfService />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </HelmetProvider>
+  <ErrorBoundary>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <SkipToContent />
+            <FocusManager />
+            <AnalyticsTracker />
+            <CookieConsent />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/lead-magnet" element={<LeadMagnet />} />
+              <Route path="/quiz" element={<Quiz />} />
+              <Route path="/comparison" element={<Comparison />} />
+              <Route path="/referral" element={<Referral />} />
+              <Route path="/success-stories" element={<SuccessStories />} />
+              <Route path="/partnerships" element={<Partnerships />} />
+              <Route path="/submit-content" element={<UGCSubmission />} />
+              <Route path="/contest" element={<Contest />} />
+              <Route path="/ambassador" element={<Ambassador />} />
+              <Route path="/create-content" element={<ShareableContent />} />
+              <Route path="/booking" element={<Booking />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/waitlist" element={<Waitlist />} />
+              <Route path="/loyalty" element={<Loyalty />} />
+              <Route path="/blog-cms" element={<BlogCMS />} />
+              <Route path="/newsletter" element={<Newsletter />} />
+              <Route path="/resources" element={<Resources />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/member-portal" element={<MemberPortal />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/links" element={<LinkInBio />} />
+              <Route path="/gmb" element={<GMBOptimization />} />
+              <Route path="/reviews" element={<ReviewGeneration />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
+  </ErrorBoundary>
 );
 
 export default App;
