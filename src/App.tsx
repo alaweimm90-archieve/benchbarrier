@@ -27,6 +27,9 @@ import Booking from "./pages/Booking";
 import FAQ from "./pages/FAQ";
 import Waitlist from "./pages/Waitlist";
 import Loyalty from "./pages/Loyalty";
+import BlogCMS from "./pages/BlogCMS";
+import Newsletter from "./pages/Newsletter";
+import Resources from "./pages/Resources";
 
 const queryClient = new QueryClient();
 
@@ -76,6 +79,9 @@ const App = () => (
             <Route path="/faq" element={<FAQ />} />
             <Route path="/waitlist" element={<Waitlist />} />
             <Route path="/loyalty" element={<Loyalty />} />
+            <Route path="/blog-cms" element={<BlogCMS />} />
+            <Route path="/newsletter" element={<Newsletter />} />
+            <Route path="/resources" element={<Resources />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="*" element={<NotFound />} />
