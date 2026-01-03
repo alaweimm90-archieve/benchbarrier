@@ -18,6 +18,10 @@ import UGCSubmission from "./pages/UGCSubmission";
 import Contest from "./pages/Contest";
 import Ambassador from "./pages/Ambassador";
 import ShareableContent from "./pages/ShareableContent";
+import Booking from "./pages/Booking";
+import FAQ from "./pages/FAQ";
+import Waitlist from "./pages/Waitlist";
+import Loyalty from "./pages/Loyalty";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +44,10 @@ const App = () => (
             <Route path="/contest" element={<Contest />} />
             <Route path="/ambassador" element={<Ambassador />} />
             <Route path="/create-content" element={<ShareableContent />} />
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/waitlist" element={<Waitlist />} />
+            <Route path="/loyalty" element={<Loyalty />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="*" element={<NotFound />} />
