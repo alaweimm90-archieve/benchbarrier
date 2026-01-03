@@ -10,10 +10,12 @@ import InstagramWall from "../components/sections/InstagramWall";
 import LuxuryFooter from "../components/sections/LuxuryFooter";
 import ScrollProgress from "../components/shared/ScrollProgress";
 import LoadingAnimation from "../components/shared/LoadingAnimation";
+import { SEOHead } from "@/components/seo/SEOHead";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-deep-black">
+      <SEOHead />
       <LoadingAnimation />
       <ScrollProgress />
       <GlassmorphNav />

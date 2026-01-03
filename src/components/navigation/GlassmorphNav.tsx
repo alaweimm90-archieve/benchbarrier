@@ -174,3 +174,4 @@ const GlassmorphNav = () => {
 };
 
 export default GlassmorphNav;
+export { GlassmorphNav };
