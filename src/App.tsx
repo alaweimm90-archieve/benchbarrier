@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import { useEffect } from 'react';
 import { initGA, logPageView } from './lib/analytics';
+import { registerServiceWorker, initPWAInstallPrompt } from './lib/pwa';
 import { SkipToContent } from './components/accessibility/SkipToContent';
 import { FocusManager } from './components/accessibility/FocusManager';
 import { CookieConsent } from './components/security/CookieConsent';
@@ -30,6 +31,9 @@ import Loyalty from "./pages/Loyalty";
 import BlogCMS from "./pages/BlogCMS";
 import Newsletter from "./pages/Newsletter";
 import Resources from "./pages/Resources";
+import Payment from "./pages/Payment";
+import MemberPortal from "./pages/MemberPortal";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +42,10 @@ const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
 if (GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX') {
   initGA(GA_MEASUREMENT_ID);
 }
+
+// Initialize PWA
+registerServiceWorker();
+initPWAInstallPrompt();
 
 // Component to track page views
 const AnalyticsTracker = () => {
@@ -82,6 +90,9 @@ const App = () => (
             <Route path="/blog-cms" element={<BlogCMS />} />
             <Route path="/newsletter" element={<Newsletter />} />
             <Route path="/resources" element={<Resources />} />
+            <Route path="/payment" element={<Payment />} />
+            <Route path="/member-portal" element={<MemberPortal />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="*" element={<NotFound />} />
