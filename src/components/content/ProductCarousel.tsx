@@ -65,6 +65,13 @@ const products: Product[] = [
     price: "€3,950",
     image: shadowlineImage,
   },
+  {
+    id: 7,
+    name: "Spark",
+    category: "Earrings",
+    price: "€1,850",
+    image: haloImage,
+  },
 ];
 
 const ProductCarousel = () => {
