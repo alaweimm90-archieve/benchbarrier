@@ -1,13 +1,6 @@
-<<<<<<< HEAD:tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ['class'],
-=======
-import type { Config } from 'tailwindcss';
-import { createTailwindConfig } from '@monorepo/config/tailwind/base-preset';
-
-export default createTailwindConfig({
->>>>>>> 623e480dcc1a2bebb533e82725535f85f9aba148:tailwind.config.ts
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
@@ -15,7 +8,6 @@ export default createTailwindConfig({
     './src/**/*.{ts,tsx}',
   ],
   theme: {
-<<<<<<< HEAD:tailwind.config.js
     container: {
       center: true,
       padding: '2rem',
@@ -55,23 +47,6 @@ export default createTailwindConfig({
         display: ['Orbitron', 'Space Grotesk', 'sans-serif'],
       },
       colors: {
-=======
-    extend: {
-      // Bench Barrier theme - performance benchmarking platform
-      fontFamily: {
-        sans: [
-          'Space Grotesk',
-          'Inter',
-          '-apple-system',
-          'BlinkMacSystemFont',
-          'Segoe UI',
-          'sans-serif',
-        ],
-        mono: ['Fira Code', 'JetBrains Mono', 'SF Mono', 'Monaco', 'Inconsolata', 'monospace'],
-        display: ['Orbitron', 'Space Grotesk', 'sans-serif'],
-      },
-      colors: {
->>>>>>> 623e480dcc1a2bebb533e82725535f85f9aba148:tailwind.config.ts
         // Quantum colors
         'quantum-purple': 'hsl(var(--quantum-purple))',
         'quantum-pink': 'hsl(var(--plasma-pink))',
@@ -175,9 +150,5 @@ export default createTailwindConfig({
       },
     },
   },
-<<<<<<< HEAD:tailwind.config.js
   plugins: [require('tailwindcss-animate')],
 };
-=======
-} satisfies Config);
->>>>>>> 623e480dcc1a2bebb533e82725535f85f9aba148:tailwind.config.ts
