@@ -1,0 +1,172 @@
+[
+  {
+    "id": "payment-workflow",
+    "title": "Payment Processing Workflow",
+    "type": "architecture",
+    "content": "The payment workflow orchestrates secure payment processing with fraud detection and retry logic. It follows a three-step process: 1) Fraud Detection - analyze transaction risk, 2) Payment Processing - execute payment through gateway, 3) Post-Processing - send confirmations and update membership status.",
+    "tags": ["payment", "workflow", "security", "stripe"],
+    "dependencies": ["fraud-detection", "email-service"],
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-03T00:00:00Z",
+    "metadata": {
+      "author": "BenchBarrier Team",
+      "difficulty": "intermediate",
+      "estimatedReadTime": 5,
+      "codeExamples": 3,
+      "relatedFiles": ["src/core/usecases/PaymentWorkflow.ts", "src/adapters/api/StripeAdapter.ts"]
+    }
+  },
+  {
+    "id": "fraud-detection",
+    "title": "Fraud Detection System",
+    "type": "concept",
+    "content": "The fraud detection system analyzes transactions in real-time to identify suspicious patterns. It assigns a risk score (0-100) and categorizes transactions as low, medium, or high risk. High-risk transactions are flagged for manual review.",
+    "tags": ["security", "fraud", "payment"],
+    "dependencies": [],
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-03T00:00:00Z",
+    "metadata": {
+      "author": "BenchBarrier Team",
+      "difficulty": "advanced",
+      "estimatedReadTime": 7,
+      "codeExamples": 2,
+      "relatedFiles": ["src/core/usecases/PaymentWorkflow.ts"]
+    }
+  },
+  {
+    "id": "email-service",
+    "title": "Email Service Integration",
+    "type": "howto",
+    "content": "The email service handles all transactional and marketing emails. It supports immediate sending and scheduled delivery. Configure EmailJS with your service ID, template ID, and public key. Templates include: welcome, confirmation, refund, re-engagement, and milestone emails.",
+    "tags": ["email", "marketing", "integration"],
+    "dependencies": [],
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-03T00:00:00Z",
+    "metadata": {
+      "author": "BenchBarrier Team",
+      "difficulty": "beginner",
+      "estimatedReadTime": 4,
+      "codeExamples": 4,
+      "relatedFiles": ["src/lib/emailService.ts", "src/core/usecases/MarketingAutomation.ts"]
+    }
+  },
+  {
+    "id": "marketing-automation",
+    "title": "Marketing Automation System",
+    "type": "architecture",
+    "content": "The marketing automation system implements the Lead → Conversion → Retention → Advocacy workflow. It includes behavioral triggers, predictive LTV modeling, and automated email sequences. Key features: lead nurture campaigns, retention touchpoints, and advocate identification.",
+    "tags": ["marketing", "automation", "workflow", "email"],
+    "dependencies": ["email-service", "segmentation-engine"],
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-03T00:00:00Z",
+    "metadata": {
+      "author": "BenchBarrier Team",
+      "difficulty": "intermediate",
+      "estimatedReadTime": 8,
+      "codeExamples": 5,
+      "relatedFiles": ["src/core/usecases/MarketingAutomation.ts"]
+    }
+  },
+  {
+    "id": "segmentation-engine",
+    "title": "User Segmentation Engine",
+    "type": "concept",
+    "content": "The segmentation engine divides users into targeted groups based on membership tier, engagement level, join date, and custom attributes. It supports predictive LTV (Lifetime Value) calculation to prioritize high-value segments for campaigns.",
+    "tags": ["marketing", "segmentation", "analytics"],
+    "dependencies": [],
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-03T00:00:00Z",
+    "metadata": {
+      "author": "BenchBarrier Team",
+      "difficulty": "advanced",
+      "estimatedReadTime": 6,
+      "codeExamples": 2,
+      "relatedFiles": ["src/core/usecases/MarketingAutomation.ts"]
+    }
+  },
+  {
+    "id": "content-synthesis",
+    "title": "Social Content Synthesis",
+    "type": "architecture",
+    "content": "The content synthesis system automates social media content creation through four stages: 1) Trend Ingestion - monitor platforms for trending topics, 2) Content Ideation - generate ideas with different angles, 3) Multi-Platform Formatting - adapt content for each platform's requirements, 4) Performance Analytics - track engagement and optimize.",
+    "tags": ["content", "social-media", "automation", "analytics"],
+    "dependencies": ["trend-analyzer", "performance-analytics"],
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-03T00:00:00Z",
+    "metadata": {
+      "author": "BenchBarrier Team",
+      "difficulty": "advanced",
+      "estimatedReadTime": 10,
+      "codeExamples": 6,
+      "relatedFiles": ["src/core/usecases/ContentSynthesis.ts"]
+    }
+  },
+  {
+    "id": "trend-analyzer",
+    "title": "Trend Analysis System",
+    "type": "concept",
+    "content": "The trend analyzer monitors social media platforms to identify trending fitness topics. It analyzes sentiment, predicts viral coefficient, and identifies related hashtags. Use this data to inform content strategy and capitalize on trending conversations.",
+    "tags": ["trends", "social-media", "analytics"],
+    "dependencies": [],
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-03T00:00:00Z",
+    "metadata": {
+      "author": "BenchBarrier Team",
+      "difficulty": "intermediate",
+      "estimatedReadTime": 5,
+      "codeExamples": 2,
+      "relatedFiles": ["src/core/usecases/ContentSynthesis.ts"]
+    }
+  },
+  {
+    "id": "performance-analytics",
+    "title": "Content Performance Analytics",
+    "type": "howto",
+    "content": "Track content performance across all platforms with unified analytics. Metrics include: total reach, engagement rate, platform breakdown, audience insights, and peak engagement times. Use recommendations to optimize future content strategy.",
+    "tags": ["analytics", "content", "performance", "social-media"],
+    "dependencies": [],
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-03T00:00:00Z",
+    "metadata": {
+      "author": "BenchBarrier Team",
+      "difficulty": "beginner",
+      "estimatedReadTime": 4,
+      "codeExamples": 1,
+      "relatedFiles": ["src/core/usecases/ContentSynthesis.ts"]
+    }
+  },
+  {
+    "id": "clean-architecture",
+    "title": "Clean Architecture Structure",
+    "type": "architecture",
+    "content": "The project follows clean architecture principles with clear separation of concerns: Core (business logic), Adapters (third-party integrations), Infrastructure (configuration and monitoring), Interfaces (UI and API layers), Automations (CI/CD workflows), and Knowledge (documentation kernels).",
+    "tags": ["architecture", "structure", "best-practices"],
+    "dependencies": [],
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-03T00:00:00Z",
+    "metadata": {
+      "author": "BenchBarrier Team",
+      "difficulty": "intermediate",
+      "estimatedReadTime": 6,
+      "codeExamples": 0,
+      "relatedFiles": ["src/core/", "src/adapters/", "src/infrastructure/"]
+    }
+  },
+  {
+    "id": "seo-optimization",
+    "title": "SEO Optimization Strategy",
+    "type": "howto",
+    "content": "Comprehensive SEO implementation includes: meta tags (Open Graph, Twitter Cards), structured data (JSON-LD schemas), sitemap.xml, robots.txt, and semantic HTML. Each page has custom SEO configuration with dynamic title, description, and keywords.",
+    "tags": ["seo", "marketing", "optimization"],
+    "dependencies": [],
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-03T00:00:00Z",
+    "metadata": {
+      "author": "BenchBarrier Team",
+      "difficulty": "beginner",
+      "estimatedReadTime": 5,
+      "codeExamples": 3,
+      "relatedFiles": ["src/components/seo/SEOHead.tsx", "public/sitemap.xml", "public/robots.txt"]
+    }
+  }
+]
