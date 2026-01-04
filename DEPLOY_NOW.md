@@ -1,123 +1,107 @@
-# 🚀 Deploy BenchBarrier to Netlify NOW
+# 🚀 Single-Branch Workflow Active!
 
-## Fastest Method (30 seconds)
+## ✅ Configuration Complete
 
-### Option 1: Netlify CLI (Recommended)
+Your BenchBarrier repository is now configured for a **single-branch workflow** using only the `main` branch.
 
-```bash
-# Run the automated script
-./deploy-netlify.sh
-```
+### What's Been Set Up
 
-The script will:
-- ✅ Install dependencies (if needed)
-- ✅ Build the project
-- ✅ Deploy to Netlify
-- ✅ Give you a live URL
+1. **Git Hooks** ✅
+   - `pre-checkout`: Prevents switching away from main
+   - `post-commit`: Automatically pushes commits to origin/main
 
-### Option 2: Manual Drag & Drop
+2. **Automation Scripts** ✅
+   - `scripts/git-commit-push.sh`: One-command commit and push
+   - `scripts/cleanup-branches.sh`: Delete all non-main branches
 
-1. **Build the project:**
-   ```bash
-   npm run build
-   ```
+3. **GitHub Actions** ✅
+   - `enforce-main-branch.yml`: Auto-closes PRs and blocks non-main pushes
 
-2. **Go to Netlify Drop:**
-   👉 https://app.netlify.com/drop
+4. **Git Configuration** ✅
+   - Default branch: `main`
+   - Auto-push enabled
+   - Branch protection configured
 
-3. **Drag the `dist` folder** onto the page
+## 🎯 How to Use
 
-4. **Get instant URL!** 🎉
-
-### Option 3: Git-Based (Automatic)
-
-If your repo is connected to Netlify:
+### Simple Workflow
 
 ```bash
-git add .
-git commit -m "Deploy to Netlify"
-git push origin main
+# Make changes to your files
+# ... edit code ...
+
+# Commit (auto-pushes to main)
+git add -A
+git commit -m "feat: your changes"
+# ✅ Automatically pushed to origin/main!
 ```
 
-Netlify will automatically build and deploy! ✨
-
----
-
-## ✅ Pre-Deployment Checklist
-
-Everything is already configured:
-
-- ✅ `netlify.toml` - Build settings
-- ✅ `_redirects` - SPA routing
-- ✅ `dist/` folder - Build output ready
-- ✅ Security headers configured
-- ✅ Asset caching optimized
-- ✅ PWA files included
-
----
-
-## 🎯 Quick Commands
+### Quick Script
 
 ```bash
-# Build
-npm run build
-
-# Deploy to production
-netlify deploy --prod
-
-# Deploy draft (preview)
-netlify deploy
-
-# Open Netlify dashboard
-netlify open
+./scripts/git-commit-push.sh "feat: your changes"
 ```
 
----
+## 🧹 Clean Up Old Branches
 
-## 📱 After Deployment
+You currently have these branches that can be deleted:
 
-Test these URLs on your live site:
-
-- `/` - Homepage
-- `/lead-magnet` - Lead magnet page
-- `/quiz` - Fitness quiz
-- `/booking` - Booking system
-- `/member-portal` - Member dashboard
-- `/admin` - Admin dashboard
-- `/system-dashboard` - System monitoring
-
----
-
-## 🔧 Environment Variables (Optional)
-
-If you need to add environment variables:
-
-1. Go to **Site settings** → **Environment variables**
-2. Add these (if applicable):
-
-```
-VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX
-VITE_STRIPE_PUBLIC_KEY=pk_live_xxxxx
-VITE_EMAILJS_SERVICE_ID=service_xxxxx
+```bash
+# Run cleanup script
+./scripts/cleanup-branches.sh
 ```
 
+This will delete:
+- `agent/benchbarrier-website-development-prompts-tailored-2866-blackbox`
+- Any other non-main branches
+
+## 📋 Current Status
+
+- ✅ **Current Branch**: `main`
+- ✅ **Latest Commit**: `4dd825e` - Single-branch workflow configured
+- ✅ **Auto-Push**: Active (post-commit hook)
+- ✅ **Branch Protection**: Active (GitHub Actions)
+- ✅ **Ready to Deploy**: Yes!
+
+## 🌐 Netlify Deployment
+
+Your main branch is ready for Netlify:
+
+1. **Automatic Deployments**: Configure Netlify to auto-deploy from `main`
+2. **Build Settings**:
+   - Branch: `main`
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+
+Every commit to `main` will trigger a new deployment automatically!
+
+## 📚 Documentation
+
+- **SINGLE_BRANCH_WORKFLOW.md** - Complete workflow guide
+- **GIT_WORKFLOW_GUIDE.md** - General git practices
+- **BRANCH_MANAGEMENT.md** - Branch management strategies
+
+## 🎉 Benefits
+
+1. **No More Branch Clutter** - Only one branch to manage
+2. **Automatic Deployment** - Every commit deploys immediately
+3. **Simplified Workflow** - No PRs, no merge conflicts
+4. **Fast Iteration** - Commit and see results instantly
+5. **Clean Repository** - Linear git history
+
+## ⚠️ Important Notes
+
+- **No New Branches**: The system prevents creating new branches
+- **Direct to Main**: All work happens directly on `main`
+- **Auto-Push**: Commits automatically push to origin
+- **PRs Blocked**: Any PR will be auto-closed with instructions
+
+## 🔄 Next Steps
+
+1. ✅ **Clean up old branches**: Run `./scripts/cleanup-branches.sh`
+2. ✅ **Configure Netlify**: Set up auto-deploy from `main`
+3. ✅ **Start coding**: Make changes and commit directly to `main`
+
 ---
 
-## 📚 Full Documentation
-
-- **Complete Guide:** `NETLIFY_DEPLOYMENT.md`
-- **Refactoring Notes:** `REFACTORING_SUMMARY.md`
-- **System Overview:** `SYSTEM_OVERVIEW.md`
-
----
-
-## 🎉 That's It!
-
-Your BenchBarrier website is production-ready and optimized for Netlify deployment.
-
-**Build Size:** 1.32 MB (367 KB gzipped)
-**Pages:** 30+
-**Components:** 55+
-**Features:** 110+
-
-🚀 **Deploy now and go live in minutes!**
+**You're all set!** Start committing to `main` and your changes will automatically push and deploy! 🚀
