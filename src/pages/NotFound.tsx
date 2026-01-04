@@ -1,14 +1,16 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Dumbbell, Home } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
-const NotFound = () => {
+export default function NotFound() {
   const location = useLocation();
 
   useEffect(() => {
     console.error('404 Error: User attempted to access non-existent route:', location.pathname);
   }, [location.pathname]);
 
-export default function NotFound() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-primary/5 to-black flex items-center justify-center px-4">
       <div className="max-w-2xl w-full text-center">
