@@ -1,7 +1,12 @@
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { Home, Search, ArrowLeft, Dumbbell } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+
+const NotFound = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    console.error('404 Error: User attempted to access non-existent route:', location.pathname);
+  }, [location.pathname]);
 
 export default function NotFound() {
   return (

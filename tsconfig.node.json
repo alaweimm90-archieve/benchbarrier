@@ -1,4 +1,5 @@
 {
+  "composite": true,
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2023"],
@@ -10,7 +11,10 @@
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noEmit": true,
+<<<<<<< HEAD
+=======
+
+>>>>>>> 623e480dcc1a2bebb533e82725535f85f9aba148
 
     /* Linting */
     "strict": true,
@@ -20,3 +24,5 @@
   },
   "include": ["vite.config.ts"]
 }
+
+
