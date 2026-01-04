@@ -1,4 +1,3 @@
-import StatusBar from './StatusBar';
 import Navigation from './Navigation';
 
 const Header = () => {
