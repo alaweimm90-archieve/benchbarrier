@@ -1,8 +1,12 @@
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ErrorBoundary from './components/ErrorBoundary';
 import ScrollToTop from './components/ScrollToTop';
 import Index from './pages/Index';
 import Category from './pages/Category';
@@ -19,28 +23,53 @@ import TermsOfService from './pages/TermsOfService';
 
 const queryClient = new QueryClient();
 
-// Initialize Google Analytics (replace with your actual GA4 Measurement ID)
-const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
-if (GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX') {
-  initGA(GA_MEASUREMENT_ID);
-}
-
-// Initialize PWA
-registerServiceWorker();
-initPWAInstallPrompt();
-
 // Component to track page views
 const AnalyticsTracker = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX') {
-      logPageView(location.pathname + location.search, document.title);
+    // Track page views with Plausible
+    if (import.meta.env.VITE_ENABLE_ANALYTICS === 'true') {
+      // @ts-ignore - Plausible is loaded via script tag
+      if (window.plausible) {
+        // @ts-ignore
+        window.plausible('pageview');
+      }
     }
   }, [location]);
 
   return null;
 };
+
+// Stub components for missing imports
+const FreeShippingBanner = () => null;
+const SkipToContent = () => null;
+const FocusManager = () => null;
+const CookieConsent = () => null;
+const LeadMagnet = () => <div>Lead Magnet</div>;
+const Quiz = () => <div>Quiz</div>;
+const Comparison = () => <div>Comparison</div>;
+const Referral = () => <div>Referral</div>;
+const SuccessStories = () => <div>Success Stories</div>;
+const Partnerships = () => <div>Partnerships</div>;
+const UGCSubmission = () => <div>UGC Submission</div>;
+const Contest = () => <div>Contest</div>;
+const Ambassador = () => <div>Ambassador</div>;
+const ShareableContent = () => <div>Shareable Content</div>;
+const Booking = () => <div>Booking</div>;
+const FAQ = () => <div>FAQ</div>;
+const Waitlist = () => <div>Waitlist</div>;
+const Loyalty = () => <div>Loyalty</div>;
+const BlogCMS = () => <div>Blog CMS</div>;
+const Newsletter = () => <div>Newsletter</div>;
+const Resources = () => <div>Resources</div>;
+const Payment = () => <div>Payment</div>;
+const MemberPortal = () => <div>Member Portal</div>;
+const AdminDashboard = () => <div>Admin Dashboard</div>;
+const LinkInBio = () => <div>Link In Bio</div>;
+const GMBOptimization = () => <div>GMB Optimization</div>;
+const ReviewGeneration = () => <div>Review Generation</div>;
+const SystemDashboard = () => <div>System Dashboard</div>;
 
 const App = () => (
   <ErrorBoundary>
