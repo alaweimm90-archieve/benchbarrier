@@ -19,7 +19,7 @@ npm install
 
 # Set up environment variables
 cp .env.example .env.local
-# Add your Stripe keys to .env.local
+# Add your Supabase and Stripe keys to .env.local
 
 # Run development server
 npm run dev
@@ -32,6 +32,7 @@ npm run dev
 - **Framework:** Next.js 16 (App Router)
 - **Styling:** Tailwind CSS v4 (Brutalist customization)
 - **UI Components:** shadcn/ui (customized, no rounding)
+- **Backend:** Supabase (PostgreSQL)
 - **Payments:** Stripe Checkout
 - **State:** React Context API + LocalStorage
 - **Language:** TypeScript
@@ -52,137 +53,282 @@ benchbarrier/
 │   ├── student-discount/
 │   │   └── page.tsx           # Student discount (20% off)
 │   ├── team-orders/
-│   │   └── page.tsx           # Bulk ordering
+│   │   └── page.tsx           # Team/bulk orders
 │   ├── layout.tsx             # Root layout
-│   ├── page.tsx               # Homepage (video backgrounds)
+│   ├── page.tsx               # Homepage
 │   └── globals.css            # Brutalist design system
 ├── components/
-│   ├── navbar.tsx             # Navigation with burger menu
-│   ├── footer.tsx             # Footer with split-color logo
+│   ├── navbar.tsx             # Burger menu navigation
+│   ├── footer.tsx             # Split-color logo footer
 │   ├── product-card.tsx       # Product display card
-│   └── ui/                    # shadcn components
+│   └── ui/                    # shadcn/ui components
 ├── lib/
-│   ├── products.ts            # Product data (8 SKUs)
+│   ├── products.ts            # Product catalog (8 SKUs)
 │   ├── cart-context.tsx       # Cart state management
 │   ├── stripe.ts              # Stripe initialization
+│   ├── supabase.ts            # Supabase client
 │   └── utils.ts               # Utility functions
 ├── public/
 │   └── media/                 # Images and videos
-└── next.config.js             # Next.js configuration
+├── supabase-schema.sql        # Database schema
+├── CONFIGURATION_GUIDE.md     # Full configuration docs
+├── QUICK_REFERENCE.md         # Quick reference card
+└── DEPLOYMENT_GUIDE.md        # Deployment instructions
 ```
 
 ## 🛍️ Features
 
 ### Core E-Commerce
-- ✅ Product catalog with 8 SKUs
+- ✅ 8 SKU product catalog
 - ✅ Shopping cart with LocalStorage persistence
 - ✅ Stripe Checkout integration
-- ✅ Category filtering (Protection, Accessories, Bundles)
+- ✅ Real-time cart totals
+- ✅ Quantity management
 
 ### Special Pages
-- ✅ Student Discount (20% off with .edu email)
-- ✅ Team/Bulk Orders (volume pricing)
-- ✅ About page (mission, specs, story)
+- ✅ Student discount (20% off with .edu email)
+- ✅ Team/bulk orders with volume pricing
+- ✅ About page with mission and specs
 
 ### Design Features
-- ✅ Video backgrounds (homepage sections)
-- ✅ Responsive burger menu
-- ✅ Split-color logo in footer
-- ✅ Zero rounded corners (enforced globally)
+- ✅ Video backgrounds on homepage
+- ✅ Burger menu navigation
+- ✅ Responsive grid layouts
 - ✅ High-contrast brutalist aesthetic
+- ✅ Zero rounded corners (enforced globally)
 
-## 🎯 Product SKUs
+## 🔧 Configuration
 
-1. **BenchBarrier Standard** - $29.99
-2. **BenchBarrier Premium** - $49.99
-3. **Gym Towel Set** - $24.99
-4. **Gym Bag Bundle** - $69.99
-5. **BenchBarrier Pro Pack** - $79.99
-6. **Grip Enhancer Spray** - $14.99
-7. **Equipment Cleaner Kit** - $19.99
-8. **Elite Complete Bundle** - $129.99
-
-## 🔧 Environment Variables
+### Environment Variables
 
 Create `.env.local` with:
 
 ```env
-STRIPE_SECRET_KEY=sk_test_your_key
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_key
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://ylfgahoeddxynelezlhw.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# Stripe (Test Mode)
+STRIPE_SECRET_KEY=sk_test_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+
+# Site
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-## 📹 Media Assets
+**See `CONFIGURATION_GUIDE.md` for full setup instructions.**
 
-Place in `public/media/`:
-- Product images (8 JPGs)
-- `Rio_BenchBarrier.mp4` (hero video)
-- `Stephanie_Lingerie.mp4` (demo video)
+### Database Setup
 
-## 🎨 Design System
+1. Go to Supabase SQL Editor
+2. Run `supabase-schema.sql`
+3. Verify tables created
 
-### Colors
-- Background: `stone-950` (#0c0a09)
-- Text: `stone-50` (#fafaf9)
-- Accent: `blue-500` (#3b82f6)
-- Borders: `stone-800` (#292524)
+### Stripe Products
 
-### Typography
-- Font: JetBrains Mono (monospace)
-- Headings: Uppercase, bold, tracking-tight
-- Body: Uppercase
+8 products configured in Stripe Dashboard:
 
-### Components
-- Buttons: `.btn-brutalist`, `.btn-brutalist-outline`
-- Cards: `.card-brutalist`
-- Inputs: `.input-brutalist`
-- **All elements:** `border-radius: 0 !important`
+| Product | Price | Stripe ID |
+|---------|-------|-----------|
+| Bench Cover Pro | $49.99 | prod_TjQzKdRKzHKZHE |
+| Standard Bench Cover | $34.99 | prod_TjQzVakXR16wzn |
+| Elite Mat Protector | $79.99 | prod_TjR0zg0mMVhkjK |
+| Quick-Clean Mat Shield | $59.99 | prod_TjR03Oqbrt0uVm |
+| Portable Gym Towel Set | $39.99 | prod_TjR1Y1WfDbEOEW |
+| Premium Gym Bag Bundle | $89.99 | prod_TjR2fmozAGj7mw |
+| Team Bundle - 5 Covers | $199.99 | prod_TjR27zz2qyZCIt |
+| Premium Protection Package | $299.99 | prod_TjR3qFxTiFQg7r |
+
+## 🧪 Testing
+
+### Test Stripe Checkout
+
+Use these test card numbers:
+
+```
+Visa:       4242 4242 4242 4242
+Mastercard: 5555 5555 5555 4444
+Amex:       3782 822463 10005
+
+CVC: Any 3 digits
+Expiry: Any future date
+```
+
+### Run Tests
+
+```bash
+npm run build        # Build for production
+npm run type-check   # TypeScript validation
+npm run lint         # ESLint
+```
+
+## 📝 NPM Scripts
+
+```bash
+npm run dev          # Start development server (port 3000)
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run type-check   # Run TypeScript compiler
+```
 
 ## 🚀 Deployment
 
 ### Vercel (Recommended)
-```bash
-npm run build
-vercel deploy
+
+1. **Push to GitHub**
+2. **Import to Vercel**
+3. **Add environment variables:**
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `STRIPE_SECRET_KEY`
+   - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+   - `NEXT_PUBLIC_SITE_URL`
+4. **Deploy**
+
+**See `DEPLOYMENT_GUIDE.md` for detailed instructions.**
+
+## 🎨 Design System
+
+### Colors
+```css
+Background: stone-950 (#0c0a09)
+Accent: blue-500 (#3b82f6)
+Text: stone-50 (#fafaf9)
+Border: stone-800 (#292524)
 ```
 
-### Environment Variables (Production)
-Set in Vercel dashboard:
-- `STRIPE_SECRET_KEY`
-- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
-- `NEXT_PUBLIC_BASE_URL`
-
-## 📝 Scripts
-
-```bash
-npm run dev          # Development server
-npm run build        # Production build
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run type-check   # TypeScript validation
+### Typography
+```css
+Font Family: JetBrains Mono (monospace)
+Headings: UPPERCASE, BOLD, TRACKING-TIGHT
+Body: UPPERCASE
 ```
 
-## 🧪 Testing
-
-Build verification:
-```bash
-npm run build
-npm run start
+### Layout
+```css
+Borders: 2-4px solid
+Corners: ZERO ROUNDING (rounded-none)
+Spacing: Consistent 4/8/16/24px grid
+Contrast: HIGH (WCAG AAA)
 ```
+
+## 📚 Documentation
+
+- **`QUICK_REFERENCE.md`** - Quick reference card with API keys and commands
+- **`CONFIGURATION_GUIDE.md`** - Complete Supabase and Stripe setup
+- **`DEPLOYMENT_GUIDE.md`** - Deployment instructions for Vercel
+- **`PROJECT_SUMMARY.md`** - Detailed feature list and architecture
+- **`IMPLEMENTATION_COMPLETE.md`** - Implementation checklist
 
 ## 🔒 Security
 
-- Server-side Stripe integration
-- No client-side secret keys
-- Environment variable validation
-- Secure checkout flow
+- ✅ Environment variables for sensitive keys
+- ✅ Server-side Stripe operations
+- ✅ Supabase Row Level Security (RLS)
+- ✅ Client-side cart validation
+- ✅ HTTPS enforced in production
+
+## 🐛 Troubleshooting
+
+### Build Errors
+
+```bash
+# Clear cache and rebuild
+rm -rf .next node_modules
+npm install
+npm run build
+```
+
+### Environment Variables Not Loading
+
+```bash
+# Restart dev server after changing .env.local
+npm run dev
+```
+
+### Supabase Connection Error
+
+- Verify URL and anon key in `.env.local`
+- Check Supabase project is active
+- Verify RLS policies
+
+### Stripe Checkout Error
+
+- Verify secret key in `.env.local`
+- Check you're in test mode
+- Use test card numbers
+
+## 📦 Product Catalog
+
+### Protection (4 products)
+- Bench Cover Pro ($49.99)
+- Standard Bench Cover ($34.99)
+- Elite Mat Protector ($79.99)
+- Quick-Clean Mat Shield ($59.99)
+
+### Accessories (1 product)
+- Portable Gym Towel Set ($39.99)
+
+### Bundles (3 products)
+- Premium Gym Bag Bundle ($89.99)
+- Team Bundle - 5 Covers ($199.99)
+- Premium Protection Package ($299.99)
+
+## 🌐 Architecture
+
+```
+┌─────────────────────────────────────────────┐
+│         BENCHBARRIER ARCHITECTURE           │
+├─────────────────────────────────────────────┤
+│                                             │
+│  Frontend (Next.js 16 + React)             │
+│  └─ Deployed on: Vercel                    │
+│     URL: benchbarrier.vercel.app           │
+│                                             │
+│  Backend (Supabase PostgreSQL)             │
+│  └─ Project: ylfgahoeddxynelezlhw          │
+│     URL: ylfgahoeddxynelezlhw.supabase.co  │
+│     Region: East US (AWS)                  │
+│                                             │
+│  Payments (Stripe)                         │
+│  └─ Mode: Test (switch to live for prod)  │
+│     Products: 8 SKUs configured            │
+│                                             │
+│  Error Tracking (Sentry)                   │
+│  └─ Org: alawein                           │
+│     Project: sentry-alawein-team           │
+│                                             │
+│  Analytics (Plausible)                     │
+│  └─ Domain: benchbarrier.com               │
+│                                             │
+└─────────────────────────────────────────────┘
+```
 
 ## 📄 License
 
 MIT License - See LICENSE file for details
 
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests: `npm run build && npm run type-check`
+5. Submit a pull request
+
+## 📞 Support
+
+- **Documentation:** See `/docs` folder
+- **Issues:** GitHub Issues
+- **Email:** contact@benchbarrier.com
+
 ---
 
-**Status:** Production Ready  
+**Status:** ✅ Production Ready  
+**Version:** 1.0.0  
 **Last Updated:** January 4, 2026  
-**Framework:** Next.js 16 with App Router
+**Framework:** Next.js 16.1.1 (App Router)  
+**Design:** Brutalist E-Commerce Platform
