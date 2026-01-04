@@ -19,31 +19,77 @@ import TermsOfService from './pages/TermsOfService';
 
 const queryClient = new QueryClient();
 
+// Initialize Google Analytics (replace with your actual GA4 Measurement ID)
+const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+if (GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX') {
+  initGA(GA_MEASUREMENT_ID);
+}
+
+// Initialize PWA
+registerServiceWorker();
+initPWAInstallPrompt();
+
+// Component to track page views
+const AnalyticsTracker = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX') {
+      logPageView(location.pathname + location.search, document.title);
+    }
+  }, [location]);
+
+  return null;
+};
+
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/category/:category" element={<Category />} />
-          <Route path="/product/:productId" element={<ProductDetail />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/about/our-story" element={<OurStory />} />
-          <Route path="/about/sustainability" element={<Sustainability />} />
-          <Route path="/about/size-guide" element={<SizeGuide />} />
-          <Route path="/about/customer-care" element={<CustomerCare />} />
-          <Route path="/about/store-locator" element={<StoreLocator />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <ErrorBoundary>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <FreeShippingBanner />
+            <SkipToContent />
+            <FocusManager />
+            <AnalyticsTracker />
+            <CookieConsent />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/lead-magnet" element={<LeadMagnet />} />
+              <Route path="/quiz" element={<Quiz />} />
+              <Route path="/comparison" element={<Comparison />} />
+              <Route path="/referral" element={<Referral />} />
+              <Route path="/success-stories" element={<SuccessStories />} />
+              <Route path="/partnerships" element={<Partnerships />} />
+              <Route path="/submit-content" element={<UGCSubmission />} />
+              <Route path="/contest" element={<Contest />} />
+              <Route path="/ambassador" element={<Ambassador />} />
+              <Route path="/create-content" element={<ShareableContent />} />
+              <Route path="/booking" element={<Booking />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/waitlist" element={<Waitlist />} />
+              <Route path="/loyalty" element={<Loyalty />} />
+              <Route path="/blog-cms" element={<BlogCMS />} />
+              <Route path="/newsletter" element={<Newsletter />} />
+              <Route path="/resources" element={<Resources />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/member-portal" element={<MemberPortal />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/links" element={<LinkInBio />} />
+              <Route path="/gmb" element={<GMBOptimization />} />
+              <Route path="/reviews" element={<ReviewGeneration />} />
+              <Route path="/system-dashboard" element={<SystemDashboard />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
+  </ErrorBoundary>
 );
 
 export default App;
