@@ -1,152 +1,188 @@
-# BenchBarrier
+# BenchBarrier E-Commerce Platform
 
-> Performance benchmarking suite
+> Clinical-grade gym equipment protection with brutalist design aesthetic
+
+## 🎨 Design Philosophy
+
+**Brutalist E-Commerce** - A high-performance Next.js application featuring:
+- **Stone-950 backgrounds** (near black)
+- **Blue-500 accents** (Cobalt #3b82f6)
+- **Monospace typography** (JetBrains Mono)
+- **Zero rounded corners** - Sharp, clinical aesthetic
+- **High contrast** - Technical precision
 
 ## 🚀 Quick Start
 
 ```bash
-# Clone the repository
-git clone https://github.com/alawein/nexus-framework.git
-cd nexus-framework/platforms/benchbarrier
-
 # Install dependencies
 npm install
 
-# Start development
+# Set up environment variables
+cp .env.example .env.local
+# Add your Stripe keys to .env.local
+
+# Run development server
 npm run dev
 
-# Visit http://localhost:3005
+# Visit http://localhost:3000
 ```
 
-## ✨ Features
+## 📦 Tech Stack
 
-- Performance Testing
-- Benchmarking
+- **Framework:** Next.js 16 (App Router)
+- **Styling:** Tailwind CSS v4 (Brutalist customization)
+- **UI Components:** shadcn/ui (customized, no rounding)
+- **Payments:** Stripe Checkout
+- **State:** React Context API + LocalStorage
+- **Language:** TypeScript
 
-## 🛠 Tech Stack
+## 🏗️ Project Structure
 
-### Frontend
-
-- **React**
-- **TypeScript**
-- **Vite**
-
-### Backend
-
-- **Supabase**
-
-### Testing
-
-- **Vitest**
-- **Playwright**
-
-### Specialized
-
-- **Benchmarking**
-- **Performance Analysis**
-
-## 📁 Project Structure
-
-```text
+```
 benchbarrier/
-├── src/
-│   ├── components/     # Reusable UI components
-│   ├── pages/         # Page components
-│   ├── hooks/         # Custom React hooks
-│   ├── utils/         # Utility functions
-│   ├── stores/        # State management
-│   └── types/         # TypeScript type definitions
-├── public/            # Static assets
-├── docs/             # Documentation
-└── scripts/          # Build and utility scripts
+├── app/
+│   ├── actions/
+│   │   └── stripe.ts          # Server actions for Stripe
+│   ├── about/
+│   │   └── page.tsx           # About page
+│   ├── cart/
+│   │   └── page.tsx           # Shopping cart
+│   ├── products/
+│   │   └── page.tsx           # Product catalog
+│   ├── student-discount/
+│   │   └── page.tsx           # Student discount (20% off)
+│   ├── team-orders/
+│   │   └── page.tsx           # Bulk ordering
+│   ├── layout.tsx             # Root layout
+│   ├── page.tsx               # Homepage (video backgrounds)
+│   └── globals.css            # Brutalist design system
+├── components/
+│   ├── navbar.tsx             # Navigation with burger menu
+│   ├── footer.tsx             # Footer with split-color logo
+│   ├── product-card.tsx       # Product display card
+│   └── ui/                    # shadcn components
+├── lib/
+│   ├── products.ts            # Product data (8 SKUs)
+│   ├── cart-context.tsx       # Cart state management
+│   ├── stripe.ts              # Stripe initialization
+│   └── utils.ts               # Utility functions
+├── public/
+│   └── media/                 # Images and videos
+└── next.config.js             # Next.js configuration
 ```
 
-## 🧪 Development
+## 🛍️ Features
 
-### Available Scripts
+### Core E-Commerce
+- ✅ Product catalog with 8 SKUs
+- ✅ Shopping cart with LocalStorage persistence
+- ✅ Stripe Checkout integration
+- ✅ Category filtering (Protection, Accessories, Bundles)
 
-```bash
-dev: npm run dev
-build: npm run build
-test: npm run test
-lint: npm run lint
-typeCheck: npm run type-check
-preview: npm run preview
-```
+### Special Pages
+- ✅ Student Discount (20% off with .edu email)
+- ✅ Team/Bulk Orders (volume pricing)
+- ✅ About page (mission, specs, story)
 
-### Environment Variables
+### Design Features
+- ✅ Video backgrounds (homepage sections)
+- ✅ Responsive burger menu
+- ✅ Split-color logo in footer
+- ✅ Zero rounded corners (enforced globally)
+- ✅ High-contrast brutalist aesthetic
 
-Create a `.env.local` file in the root directory:
+## 🎯 Product SKUs
+
+1. **BenchBarrier Standard** - $29.99
+2. **BenchBarrier Premium** - $49.99
+3. **Gym Towel Set** - $24.99
+4. **Gym Bag Bundle** - $69.99
+5. **BenchBarrier Pro Pack** - $79.99
+6. **Grip Enhancer Spray** - $14.99
+7. **Equipment Cleaner Kit** - $19.99
+8. **Elite Complete Bundle** - $129.99
+
+## 🔧 Environment Variables
+
+Create `.env.local` with:
 
 ```env
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+STRIPE_SECRET_KEY=sk_test_your_key
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_key
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ```
+
+## 📹 Media Assets
+
+Place in `public/media/`:
+- Product images (8 JPGs)
+- `Rio_BenchBarrier.mp4` (hero video)
+- `Stephanie_Lingerie.mp4` (demo video)
+
+## 🎨 Design System
+
+### Colors
+- Background: `stone-950` (#0c0a09)
+- Text: `stone-50` (#fafaf9)
+- Accent: `blue-500` (#3b82f6)
+- Borders: `stone-800` (#292524)
+
+### Typography
+- Font: JetBrains Mono (monospace)
+- Headings: Uppercase, bold, tracking-tight
+- Body: Uppercase
+
+### Components
+- Buttons: `.btn-brutalist`, `.btn-brutalist-outline`
+- Cards: `.card-brutalist`
+- Inputs: `.input-brutalist`
+- **All elements:** `border-radius: 0 !important`
 
 ## 🚀 Deployment
 
-### Docker
-
+### Vercel (Recommended)
 ```bash
-# Build image
-docker build -t benchbarrier .
-
-# Run container
-docker run -p 3005:3005 benchbarrier
+npm run build
+vercel deploy
 ```
 
-### Docker Compose
+### Environment Variables (Production)
+Set in Vercel dashboard:
+- `STRIPE_SECRET_KEY`
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+- `NEXT_PUBLIC_BASE_URL`
+
+## 📝 Scripts
 
 ```bash
-# Start with profile
-docker-compose --profile benchbarrier up -d
+npm run dev          # Development server
+npm run build        # Production build
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run type-check   # TypeScript validation
 ```
 
 ## 🧪 Testing
 
+Build verification:
 ```bash
-# Run unit tests
-npm run test
-
-# Run E2E tests
-npm run test:e2e
-
-# Run with coverage
-npm run test:coverage
+npm run build
+npm run start
 ```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the
-[LICENSE](../../LICENSE) file for details.
-
-## 🔗 Links
-
-- **Main Repository**: https://github.com/alawein/nexus-framework
-- **Documentation**: [../../docs](../../docs)
-- **Issues**: https://github.com/alawein/nexus-framework/issues
-
-## 📊 Monitoring
-
-- **Error Tracking**: Sentry
-- **Performance**: Web Vitals
-- **Analytics**: Plausible
 
 ## 🔒 Security
 
-- **Content Security Policy**: Configured
-- **Rate Limiting**: Implemented
-- **Dependency Auditing**: Automated
+- Server-side Stripe integration
+- No client-side secret keys
+- Environment variable validation
+- Secure checkout flow
+
+## 📄 License
+
+MIT License - See LICENSE file for details
 
 ---
 
-_Platform: BenchBarrier_ _Entity: Alawein Technologies_ _Status: production_
-_Last updated: 2025-12-15_
+**Status:** Production Ready  
+**Last Updated:** January 4, 2026  
+**Framework:** Next.js 16 with App Router

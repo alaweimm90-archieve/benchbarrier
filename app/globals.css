@@ -1,0 +1,96 @@
+/* Font imports must come first */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 12 10% 9.8%; /* stone-950 */
+    --foreground: 0 0% 100%;
+    --primary: 217 91% 60%; /* blue-500 */
+    --primary-foreground: 0 0% 100%;
+    --border: 25 6% 20%; /* stone-800 */
+    --radius: 0rem; /* NO ROUNDING */
+  }
+
+  * {
+    border-radius: 0 !important; /* Force zero rounding everywhere */
+  }
+
+  body {
+    @apply bg-stone-950 text-stone-50 font-mono;
+    font-feature-settings: "kern" 1, "liga" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply uppercase font-bold tracking-tight;
+  }
+
+  p, span, div {
+    @apply uppercase;
+  }
+}
+
+@layer components {
+  /* Brutalist Button */
+  .btn-brutalist {
+    @apply bg-blue-500 text-stone-950 uppercase font-bold px-6 py-3 border-2 border-blue-500 
+           hover:bg-stone-950 hover:text-blue-500 transition-colors duration-200;
+    border-radius: 0 !important;
+  }
+
+  .btn-brutalist-outline {
+    @apply bg-transparent text-blue-500 uppercase font-bold px-6 py-3 border-2 border-blue-500 
+           hover:bg-blue-500 hover:text-stone-950 transition-colors duration-200;
+    border-radius: 0 !important;
+  }
+
+  /* Brutalist Card */
+  .card-brutalist {
+    @apply bg-stone-900 border-2 border-stone-800 p-6;
+    border-radius: 0 !important;
+  }
+
+  /* Brutalist Input */
+  .input-brutalist {
+    @apply bg-stone-900 border-2 border-stone-800 text-stone-50 px-4 py-2 
+           focus:border-blue-500 focus:outline-none uppercase font-mono;
+    border-radius: 0 !important;
+  }
+
+  /* Remove all rounded corners from shadcn components */
+  .rounded-none {
+    border-radius: 0 !important;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Force sharp corners */
+  * {
+    border-radius: 0 !important;
+  }
+}
+
+/* Override any component library rounding */
+button,
+input,
+select,
+textarea,
+div,
+section,
+article,
+aside,
+nav,
+header,
+footer,
+main {
+  border-radius: 0 !important;
+}
