@@ -1,0 +1,68 @@
+name: Stale Branch Cleanup
+
+on:
+  schedule:
+    # Run every Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Delete stale branches
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🔍 Finding stale branches (>30 days old)..."
+          
+          # Get current date in seconds
+          CURRENT_DATE=$(date +%s)
+          DAYS_THRESHOLD=30
+          DELETED_COUNT=0
+          
+          # Fetch all branches
+          git fetch --all --prune
+          
+          # Get all remote branches except main and dev
+          for branch in $(git branch -r | grep -v 'HEAD\|main\|dev' | sed 's/origin\///'); do
+            # Get last commit date
+            LAST_COMMIT=$(git log -1 --format=%ct "origin/$branch" 2>/dev/null || echo 0)
+            
+            if [ "$LAST_COMMIT" -eq 0 ]; then
+              continue
+            fi
+            
+            # Calculate days old
+            DAYS_OLD=$(( (CURRENT_DATE - LAST_COMMIT) / 86400 ))
+            
+            if [ $DAYS_OLD -gt $DAYS_THRESHOLD ]; then
+              echo "🗑️  Deleting stale branch: $branch ($DAYS_OLD days old)"
+              
+              # Delete the branch
+              git push origin --delete "$branch" 2>/dev/null || echo "   ⚠️  Failed to delete $branch"
+              
+              DELETED_COUNT=$((DELETED_COUNT + 1))
+            fi
+          done
+          
+          echo ""
+          echo "✅ Cleanup complete!"
+          echo "📊 Deleted $DELETED_COUNT stale branch(es)"
+      
+      - name: Create cleanup summary
+        if: always()
+        run: |
+          echo "## 🧹 Stale Branch Cleanup Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Date**: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Threshold**: 30 days" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: Completed" >> $GITHUB_STEP_SUMMARY
