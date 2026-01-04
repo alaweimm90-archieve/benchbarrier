@@ -19,6 +19,10 @@ function getServiceSupabase() {
   )
 }
 
+// Constants for pending team orders
+const PENDING_PRODUCT_IDS: string[] = [] // Will be determined during quote process
+const PENDING_TOTAL_AMOUNT = 0 // Will be calculated during quote process
+
 export interface TeamOrderData {
   organizationName: string
   contactName: string
@@ -32,8 +36,7 @@ export async function createTeamOrder(data: TeamOrderData) {
   try {
     const supabase = getServiceSupabase()
     
-    // For now, we'll use empty array for product_ids and 0 for total_amount
-    // These will be filled in by sales team when creating a quote
+    // Product IDs and total amount will be filled in by sales team when creating a quote
     const { data: teamOrder, error } = await supabase
       .from('team_orders')
       .insert({
@@ -42,8 +45,8 @@ export async function createTeamOrder(data: TeamOrderData) {
         contact_email: data.email,
         contact_phone: data.phone || null,
         quantity: data.quantity,
-        product_ids: [], // Will be determined during quote process
-        total_amount: 0, // Will be calculated during quote process
+        product_ids: PENDING_PRODUCT_IDS,
+        total_amount: PENDING_TOTAL_AMOUNT,
         status: 'pending',
         notes: data.message || null,
       })

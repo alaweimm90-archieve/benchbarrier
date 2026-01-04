@@ -148,7 +148,7 @@ export default function StudentDiscountPage() {
                   <code className="text-blue-500 font-mono text-lg">{verificationCode}</code>
                 </div>
                 <p className="text-stone-400 text-xs">
-                  Save this code for future purchases. The 20% discount has been applied to your cart.
+                  Save this code for future purchases. Click checkout below to receive your 20% discount.
                 </p>
               </div>
             )}
@@ -159,23 +159,27 @@ export default function StudentDiscountPage() {
               </div>
             )}
 
-            {cart.length > 0 && isVerified && (
+            {cart.length > 0 && (
               <div className="bg-stone-900 border-2 border-stone-800 p-6">
                 <div className="space-y-3">
                   <div className="flex justify-between text-stone-400 uppercase text-sm">
                     <span>Original Total</span>
                     <span>${cartTotal.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-blue-500 uppercase text-sm font-bold">
-                    <span>Student Discount (20%)</span>
-                    <span>-${savings.toFixed(2)}</span>
-                  </div>
-                  <div className="border-t-2 border-stone-800 pt-3">
-                    <div className="flex justify-between text-stone-50 font-bold uppercase text-lg">
-                      <span>Your Total</span>
-                      <span className="text-blue-500">${discountedTotal.toFixed(2)}</span>
-                    </div>
-                  </div>
+                  {isVerified && (
+                    <>
+                      <div className="flex justify-between text-blue-500 uppercase text-sm font-bold">
+                        <span>Student Discount (20%)</span>
+                        <span>-${savings.toFixed(2)}</span>
+                      </div>
+                      <div className="border-t-2 border-stone-800 pt-3">
+                        <div className="flex justify-between text-stone-50 font-bold uppercase text-lg">
+                          <span>Your Total</span>
+                          <span className="text-blue-500">${discountedTotal.toFixed(2)}</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             )}

@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@supabase/supabase-js'
+import { randomBytes } from 'crypto'
 
 function getServiceSupabase() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -20,7 +21,10 @@ function getServiceSupabase() {
 }
 
 function generateVerificationCode(): string {
-  return `STUDENT-${Math.random().toString(36).substring(2, 10).toUpperCase()}`
+  // Use cryptographically secure random bytes
+  const bytes = randomBytes(4)
+  const code = bytes.toString('hex').toUpperCase()
+  return `STUDENT-${code}`
 }
 
 export async function createStudentVerification(email: string) {
@@ -38,12 +42,41 @@ export async function createStudentVerification(email: string) {
       throw checkError
     }
 
-    // If already exists and verified, return existing code
+    // If already exists, check if still valid
     if (existing) {
+      const now = new Date()
+      const expiresAt = existing.verification_expires_at ? new Date(existing.verification_expires_at) : null
+      
+      // If expired, update with new code and expiration
+      if (expiresAt && expiresAt < now) {
+        const verificationCode = generateVerificationCode()
+        const newExpiresAt = new Date()
+        newExpiresAt.setDate(newExpiresAt.getDate() + 30)
+        
+        const { error: updateError } = await supabase
+          .from('student_verifications')
+          .update({
+            verification_code: verificationCode,
+            verification_expires_at: newExpiresAt.toISOString(),
+          })
+          .eq('email', email)
+        
+        if (updateError) throw updateError
+        
+        return {
+          success: true,
+          verificationCode,
+          alreadyExists: true,
+          wasExpired: true,
+        }
+      }
+      
+      // Still valid, return existing code
       return {
         success: true,
         verificationCode: existing.verification_code,
         alreadyExists: true,
+        wasExpired: false,
       }
     }
 
