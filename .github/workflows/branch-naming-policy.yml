@@ -1,0 +1,47 @@
+name: Branch Naming Policy
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name convention
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          
+          echo "🔍 Checking branch name: $BRANCH_NAME"
+          
+          # Allow specific patterns
+          if [[ $BRANCH_NAME =~ ^(feature|fix|hotfix|refactor|docs|test)/.+ ]]; then
+            echo "✅ Branch name is valid: $BRANCH_NAME"
+            exit 0
+          fi
+          
+          # Allow main and dev
+          if [[ $BRANCH_NAME == "main" || $BRANCH_NAME == "dev" ]]; then
+            echo "✅ Core branch: $BRANCH_NAME"
+            exit 0
+          fi
+          
+          # Reject invalid names
+          echo "❌ Invalid branch name: $BRANCH_NAME"
+          echo ""
+          echo "Branch names must follow this convention:"
+          echo "  - feature/your-feature-name"
+          echo "  - fix/bug-description"
+          echo "  - hotfix/urgent-fix"
+          echo "  - refactor/code-improvement"
+          echo "  - docs/documentation-update"
+          echo "  - test/test-addition"
+          echo ""
+          echo "Examples:"
+          echo "  ✅ feature/user-authentication"
+          echo "  ✅ fix/login-bug"
+          echo "  ✅ hotfix/security-patch"
+          echo "  ❌ my-random-branch"
+          echo "  ❌ copilot/sub-pr-3"
+          echo ""
+          exit 1
