@@ -1,7 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
-import { getServiceSupabase } from '@/lib/supabase'
 import Stripe from 'stripe'
+
+// Lazy load stripe and supabase to avoid build-time errors
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not defined')
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2025-12-15.clover',
+  })
+}
+
+function getServiceSupabase() {
+  const { createClient } = require('@supabase/supabase-js')
+  
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Supabase environment variables are not defined')
+  }
+  
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  )
+}
 
 export async function POST(request: NextRequest) {
   const body = await request.text()
@@ -15,6 +42,7 @@ export async function POST(request: NextRequest) {
   }
 
   let event: Stripe.Event
+  const stripe = getStripe()
 
   try {
     event = stripe.webhooks.constructEvent(
