@@ -16,7 +16,7 @@ export const products: Product[] = [
     name: 'Bench Cover Pro',
     description: 'Premium waterproof bench cover with antimicrobial protection',
     price: 49.99,
-    image: '/media/bench-barrier-product-shot.jpg',
+    image: '/media/bench-barrier-product-shot.svg',
     category: 'protection',
     features: [
       'Waterproof construction',
@@ -32,7 +32,7 @@ export const products: Product[] = [
     name: 'Standard Bench Cover',
     description: 'Reliable everyday bench protection for gym equipment',
     price: 34.99,
-    image: '/media/benchbarrier-standard.jpg',
+    image: '/media/benchbarrier-standard.svg',
     category: 'protection',
     features: [
       'Durable construction',
@@ -48,7 +48,7 @@ export const products: Product[] = [
     name: 'Elite Mat Protector',
     description: 'Industrial-grade heavy-duty mat protection',
     price: 79.99,
-    image: '/media/mat-protector-elite.jpg',
+    image: '/media/mat-protector-elite.svg',
     category: 'protection',
     features: [
       'Heavy-duty construction',
@@ -64,7 +64,7 @@ export const products: Product[] = [
     name: 'Quick-Clean Mat Shield',
     description: 'Fast-dry surface for high-traffic areas',
     price: 59.99,
-    image: '/media/mat-shield-quick-clean.jpg',
+    image: '/media/mat-shield-quick-clean.svg',
     category: 'protection',
     features: [
       'Quick-dry technology',
@@ -80,7 +80,7 @@ export const products: Product[] = [
     name: 'Portable Gym Towel Set',
     description: 'Ultra-absorbent microfiber towel 3-pack',
     price: 39.99,
-    image: '/media/gym-towel-set.jpg',
+    image: '/media/gym-towel-set.svg',
     category: 'accessories',
     features: [
       'Set of 3 microfiber towels',
@@ -96,7 +96,7 @@ export const products: Product[] = [
     name: 'Premium Gym Bag Bundle',
     description: 'Complete protection kit with storage',
     price: 89.99,
-    image: '/media/gym-bag-bundle.jpg',
+    image: '/media/gym-bag-bundle.svg',
     category: 'bundles',
     features: [
       'Premium gym bag',
@@ -112,7 +112,7 @@ export const products: Product[] = [
     name: 'Team Bundle - 5 Covers',
     description: 'Bulk 5-pack for teams and facilities',
     price: 199.99,
-    image: '/media/team-bundle-5pack.jpg',
+    image: '/media/team-bundle-5pack.svg',
     category: 'bundles',
     features: [
       '5x bench covers',
@@ -128,7 +128,7 @@ export const products: Product[] = [
     name: 'Premium Protection Package',
     description: '3 bench covers + 2 mat protectors bundle',
     price: 299.99,
-    image: '/media/elite-bundle.jpg',
+    image: '/media/elite-bundle.svg',
     category: 'bundles',
     features: [
       '3x bench covers',
