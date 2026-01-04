@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useCart } from '@/lib/cart-context'
 import { createStudentCheckoutSession } from '@/app/actions/stripe'
+import { createStudentVerification } from '@/app/actions/student'
 
 export default function StudentDiscountPage() {
   const { cart, cartTotal } = useCart()
@@ -10,17 +11,45 @@ export default function StudentDiscountPage() {
   const [isValidating, setIsValidating] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [verificationCode, setVerificationCode] = useState('')
+  const [isVerified, setIsVerified] = useState(false)
 
   const validateEduEmail = (email: string): boolean => {
     return email.toLowerCase().endsWith('.edu')
+  }
+
+  const handleVerify = async () => {
+    setError('')
+    
+    if (!validateEduEmail(email)) {
+      setError('Please enter a valid .edu email address')
+      return
+    }
+
+    setIsValidating(true)
+    try {
+      const result = await createStudentVerification(email)
+      
+      if (result.success) {
+        setVerificationCode(result.verificationCode || '')
+        setIsVerified(true)
+      } else {
+        setError(result.error || 'Failed to verify student email')
+      }
+    } catch (error) {
+      console.error('Verification error:', error)
+      setError('Failed to verify student email. Please try again.')
+    } finally {
+      setIsValidating(false)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
 
-    if (!validateEduEmail(email)) {
-      setError('Please enter a valid .edu email address')
+    if (!isVerified) {
+      await handleVerify()
       return
     }
 
@@ -103,8 +132,26 @@ export default function StudentDiscountPage() {
                 placeholder="your.name@university.edu"
                 className="input-brutalist w-full"
                 required
+                disabled={isVerified}
               />
             </div>
+
+            {isVerified && verificationCode && (
+              <div className="bg-stone-900 border-2 border-blue-500 p-6">
+                <h3 className="text-blue-500 font-bold uppercase text-sm mb-2">
+                  ✓ Email Verified
+                </h3>
+                <p className="text-stone-400 text-xs uppercase mb-3">
+                  Your student discount code:
+                </p>
+                <div className="bg-stone-950 border-2 border-blue-500 p-4 mb-3">
+                  <code className="text-blue-500 font-mono text-lg">{verificationCode}</code>
+                </div>
+                <p className="text-stone-400 text-xs">
+                  Save this code for future purchases. The 20% discount has been applied to your cart.
+                </p>
+              </div>
+            )}
 
             {error && (
               <div className="bg-stone-900 border-2 border-blue-500 p-4">
@@ -112,7 +159,7 @@ export default function StudentDiscountPage() {
               </div>
             )}
 
-            {cart.length > 0 && (
+            {cart.length > 0 && isVerified && (
               <div className="bg-stone-900 border-2 border-stone-800 p-6">
                 <div className="space-y-3">
                   <div className="flex justify-between text-stone-400 uppercase text-sm">
@@ -133,13 +180,24 @@ export default function StudentDiscountPage() {
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={isLoading || cart.length === 0}
-              className="w-full btn-brutalist text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? 'Processing...' : 'Verify & Checkout'}
-            </button>
+            {!isVerified ? (
+              <button
+                type="button"
+                onClick={handleVerify}
+                disabled={isValidating}
+                className="w-full btn-brutalist text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isValidating ? 'Verifying...' : 'Verify Student Email'}
+              </button>
+            ) : (
+              <button
+                type="submit"
+                disabled={isLoading || cart.length === 0}
+                className="w-full btn-brutalist text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Processing...' : 'Checkout with Discount'}
+              </button>
+            )}
           </form>
 
           {cart.length === 0 && (

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { createTeamOrder } from '@/app/actions/team-orders'
 
 export default function TeamOrdersPage() {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ export default function TeamOrdersPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -25,12 +27,37 @@ export default function TeamOrdersPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setError('')
 
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    try {
+      const result = await createTeamOrder({
+        organizationName: formData.organizationName,
+        contactName: formData.contactName,
+        email: formData.email,
+        phone: formData.phone,
+        quantity: parseInt(formData.quantity),
+        message: formData.message,
+      })
 
-    setIsSubmitting(false)
-    setSubmitted(true)
+      if (result.success) {
+        setSubmitted(true)
+        setFormData({
+          organizationName: '',
+          contactName: '',
+          email: '',
+          phone: '',
+          quantity: '',
+          message: '',
+        })
+      } else {
+        setError(result.error || 'Failed to submit team order request')
+      }
+    } catch (error) {
+      console.error('Team order submission error:', error)
+      setError('Failed to submit team order request. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (submitted) {
@@ -130,6 +157,12 @@ export default function TeamOrdersPage() {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="bg-stone-900 border-2 border-blue-500 p-4">
+                <p className="text-blue-500 text-sm uppercase">{error}</p>
+              </div>
+            )}
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="organizationName" className="block text-stone-400 uppercase text-xs font-bold mb-2">
