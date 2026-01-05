@@ -7,21 +7,13 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section with Video Background */}
+      {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Video Background */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-40"
-        >
-          <source src="/media/Rio_BenchBarrier.mp4" type="video/mp4" />
-        </video>
-
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950" />
+        
         {/* Overlay */}
-        <div className="absolute inset-0 bg-stone-950/60" />
+        <div className="absolute inset-0 bg-stone-950/40" />
 
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
@@ -79,21 +71,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Video Demo Section */}
+      {/* Demo Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Video Background */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-50"
-        >
-          <source src="/media/Stephanie_Lingerie.mp4" type="video/mp4" />
-        </video>
-
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-stone-900 via-stone-950 to-stone-900" />
+        
         {/* Overlay */}
-        <div className="absolute inset-0 bg-stone-950/70" />
+        <div className="absolute inset-0 bg-stone-950/50" />
 
         {/* Content */}
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
