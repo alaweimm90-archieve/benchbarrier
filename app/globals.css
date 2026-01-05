@@ -1,5 +1,6 @@
-/* Font imports must come first */
+/* Font imports - Pixel-perfect typography */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,90 +8,416 @@
 
 @layer base {
   :root {
-    --background: 12 10% 9.8%; /* stone-950 */
-    --foreground: 0 0% 100%;
-    --primary: 217 91% 60%; /* blue-500 */
+    /* Brutalist Color System */
+    --background: 0 0% 4%; /* #0a0a0a - Deep black */
+    --foreground: 40 5% 98%; /* #fafaf9 - Off-white */
+    --primary: 217 91% 60%; /* #3b82f6 - Electric blue */
     --primary-foreground: 0 0% 100%;
-    --border: 25 6% 20%; /* stone-800 */
-    --radius: 0rem; /* NO ROUNDING */
+    --border: 25 6% 16%; /* #292524 - Charcoal */
+    --surface: 24 10% 10%; /* #1c1917 - Dark surface */
+    
+    /* Pixel Art Palette */
+    --pixel-red: 348 100% 50%; /* #ff0040 */
+    --pixel-green: 141 100% 50%; /* #00ff41 */
+    --pixel-yellow: 60 100% 50%; /* #ffff00 */
+    --pixel-cyan: 180 100% 50%; /* #00ffff */
+    --pixel-magenta: 300 100% 50%; /* #ff00ff */
+    
+    /* Grid System (8px base) */
+    --grid-unit: 8px;
+    --border-thin: 1px;
+    --border-standard: 2px;
+    --border-thick: 4px;
+    --border-extra-thick: 8px;
+    
+    /* No border radius - pure brutalism */
+    --radius: 0rem;
   }
 
   * {
-    border-radius: 0 !important; /* Force zero rounding everywhere */
+    border-radius: 0 !important;
+    box-sizing: border-box;
+  }
+
+  html {
+    /* Snap to 8px grid */
+    font-size: 16px;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeSpeed;
   }
 
   body {
     @apply bg-stone-950 text-stone-50 font-mono;
-    font-feature-settings: "kern" 1, "liga" 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
   }
 
+  /* Typography Hierarchy */
   h1, h2, h3, h4, h5, h6 {
     @apply uppercase font-bold tracking-tight;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.1;
   }
 
-  p, span, div {
+  h1 { @apply text-4xl md:text-6xl; }
+  h2 { @apply text-3xl md:text-5xl; }
+  h3 { @apply text-2xl md:text-4xl; }
+  h4 { @apply text-xl md:text-3xl; }
+  h5 { @apply text-lg md:text-2xl; }
+  h6 { @apply text-base md:text-xl; }
+
+  p, span, div, a, button, input, textarea, select {
     @apply uppercase;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-blue-500 text-stone-950;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-stone-950;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-stone-800 border-2 border-stone-950;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-blue-500;
   }
 }
 
 @layer components {
-  /* Brutalist Button */
+  /* Brutalist Buttons */
   .btn-brutalist {
-    @apply bg-blue-500 text-stone-950 uppercase font-bold px-6 py-3 border-2 border-blue-500 
-           hover:bg-stone-950 hover:text-blue-500 transition-colors duration-200;
+    @apply bg-blue-500 text-stone-950 uppercase font-bold px-6 py-3 
+           border-2 border-blue-500 transition-all duration-200
+           hover:bg-stone-950 hover:text-blue-500 hover:shadow-[4px_4px_0px_0px_rgba(59,130,246,1)]
+           active:shadow-[2px_2px_0px_0px_rgba(59,130,246,1)] active:translate-x-[2px] active:translate-y-[2px];
     border-radius: 0 !important;
+    letter-spacing: 0.05em;
   }
 
   .btn-brutalist-outline {
-    @apply bg-transparent text-blue-500 uppercase font-bold px-6 py-3 border-2 border-blue-500 
-           hover:bg-blue-500 hover:text-stone-950 transition-colors duration-200;
+    @apply bg-transparent text-blue-500 uppercase font-bold px-6 py-3 
+           border-2 border-blue-500 transition-all duration-200
+           hover:bg-blue-500 hover:text-stone-950 hover:shadow-[4px_4px_0px_0px_rgba(59,130,246,1)]
+           active:shadow-[2px_2px_0px_0px_rgba(59,130,246,1)] active:translate-x-[2px] active:translate-y-[2px];
+    border-radius: 0 !important;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-brutalist-small {
+    @apply bg-blue-500 text-stone-950 uppercase font-bold px-4 py-2 text-sm
+           border-2 border-blue-500 transition-all duration-200
+           hover:bg-stone-950 hover:text-blue-500 hover:shadow-[2px_2px_0px_0px_rgba(59,130,246,1)]
+           active:shadow-[1px_1px_0px_0px_rgba(59,130,246,1)] active:translate-x-[1px] active:translate-y-[1px];
     border-radius: 0 !important;
   }
 
-  /* Brutalist Card */
+  /* Brutalist Cards */
   .card-brutalist {
-    @apply bg-stone-900 border-2 border-stone-800 p-6;
+    @apply bg-stone-900 border-2 border-stone-800 p-6 
+           transition-all duration-200
+           hover:border-blue-500 hover:shadow-[8px_8px_0px_0px_rgba(41,37,36,1)];
     border-radius: 0 !important;
   }
 
-  /* Brutalist Input */
+  .card-brutalist-highlight {
+    @apply bg-stone-900 border-2 border-blue-500 p-6
+           shadow-[4px_4px_0px_0px_rgba(59,130,246,1)];
+    border-radius: 0 !important;
+  }
+
+  /* Brutalist Inputs */
   .input-brutalist {
-    @apply bg-stone-900 border-2 border-stone-800 text-stone-50 px-4 py-2 
-           focus:border-blue-500 focus:outline-none uppercase font-mono;
+    @apply bg-stone-900 border-2 border-stone-800 text-stone-50 px-4 py-3
+           uppercase font-mono text-sm
+           focus:border-blue-500 focus:outline-none focus:shadow-[0_0_0_2px_rgba(59,130,246,0.3)]
+           transition-all duration-200;
     border-radius: 0 !important;
   }
 
-  /* Remove all rounded corners from shadcn components */
-  .rounded-none {
-    border-radius: 0 !important;
+  .input-brutalist::placeholder {
+    @apply text-stone-600 uppercase;
+  }
+
+  /* Pixel Art Elements */
+  .pixel-icon {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+
+  .pixel-border {
+    box-shadow: 
+      0 0 0 2px currentColor,
+      0 0 0 4px var(--background);
+  }
+
+  /* Scanline Effect */
+  .scanlines {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scanlines::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.15) 0px,
+      transparent 1px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.15) 3px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Grid Overlay */
+  .grid-overlay {
+    background-image: 
+      linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+    background-size: 8px 8px;
+  }
+
+  /* Dither Pattern */
+  .dither-pattern {
+    background-image: 
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 2px,
+        rgba(59, 130, 246, 0.05) 2px,
+        rgba(59, 130, 246, 0.05) 4px
+      );
+  }
+
+  /* Checkerboard Pattern */
+  .checkerboard {
+    background-image: 
+      linear-gradient(45deg, rgba(41, 37, 36, 0.5) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(41, 37, 36, 0.5) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, rgba(41, 37, 36, 0.5) 75%),
+      linear-gradient(-45deg, transparent 75%, rgba(41, 37, 36, 0.5) 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+  }
+
+  /* Pixel Badge */
+  .pixel-badge {
+    @apply inline-block px-3 py-1 text-xs font-bold uppercase
+           border-2 bg-stone-900 border-stone-800;
+    letter-spacing: 0.1em;
+  }
+
+  .pixel-badge-primary {
+    @apply pixel-badge bg-blue-500 text-stone-950 border-blue-500;
+  }
+
+  .pixel-badge-success {
+    @apply pixel-badge bg-green-500 text-stone-950 border-green-500;
+  }
+
+  .pixel-badge-warning {
+    @apply pixel-badge bg-yellow-500 text-stone-950 border-yellow-500;
+  }
+
+  .pixel-badge-danger {
+    @apply pixel-badge bg-red-500 text-stone-950 border-red-500;
+  }
+
+  /* Brutalist Link */
+  .link-brutalist {
+    @apply text-blue-500 uppercase font-bold underline decoration-2 underline-offset-4
+           hover:text-stone-50 hover:decoration-stone-50 transition-colors duration-200;
+  }
+
+  /* Brutalist Divider */
+  .divider-brutalist {
+    @apply border-t-2 border-stone-800 my-8;
+  }
+
+  .divider-brutalist-thick {
+    @apply border-t-4 border-stone-800 my-12;
+  }
+
+  /* Pixel Container */
+  .container-pixel {
+    @apply max-w-screen-xl mx-auto px-6;
+  }
+
+  /* Brutalist Section */
+  .section-brutalist {
+    @apply py-24 border-t-2 border-stone-800;
+  }
+
+  /* Glitch Effect */
+  .glitch {
+    position: relative;
+  }
+
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 #ff0040;
+    clip: rect(24px, 550px, 90px, 0);
+    animation: glitch-anim-1 2s infinite linear alternate-reverse;
+  }
+
+  .glitch::after {
+    left: -2px;
+    text-shadow: -2px 0 #00ffff;
+    clip: rect(85px, 550px, 140px, 0);
+    animation: glitch-anim-2 2s infinite linear alternate-reverse;
+  }
+
+  /* Pixel Art Box Shadow */
+  .shadow-pixel {
+    box-shadow: 
+      2px 0 0 0 currentColor,
+      0 2px 0 0 currentColor,
+      2px 2px 0 0 currentColor,
+      2px 0 0 0 currentColor inset,
+      0 2px 0 0 currentColor inset;
+  }
+
+  .shadow-pixel-lg {
+    box-shadow: 
+      4px 0 0 0 currentColor,
+      0 4px 0 0 currentColor,
+      4px 4px 0 0 currentColor,
+      4px 0 0 0 currentColor inset,
+      0 4px 0 0 currentColor inset;
   }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* Grid Alignment */
+  .snap-grid {
+    scroll-snap-type: both mandatory;
+    scroll-snap-align: start;
   }
-  
-  /* Force sharp corners */
-  * {
+
+  /* Pixel Perfect */
+  .pixel-perfect {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+
+  /* No Smooth */
+  .no-smooth {
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Force Sharp */
+  .force-sharp * {
     border-radius: 0 !important;
+  }
+
+  /* Monospace Numbers */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Pixel Font */
+  .font-pixel {
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    line-height: 1.6;
   }
 }
 
-/* Override any component library rounding */
-button,
-input,
-select,
-textarea,
-div,
-section,
-article,
-aside,
-nav,
-header,
-footer,
-main {
-  border-radius: 0 !important;
+/* Animations */
+@keyframes glitch-anim-1 {
+  0% { clip: rect(132px, 9999px, 101px, 0); }
+  10% { clip: rect(17px, 9999px, 94px, 0); }
+  20% { clip: rect(40px, 9999px, 66px, 0); }
+  30% { clip: rect(87px, 9999px, 82px, 0); }
+  40% { clip: rect(137px, 9999px, 61px, 0); }
+  50% { clip: rect(34px, 9999px, 14px, 0); }
+  60% { clip: rect(133px, 9999px, 74px, 0); }
+  70% { clip: rect(76px, 9999px, 107px, 0); }
+  80% { clip: rect(59px, 9999px, 130px, 0); }
+  90% { clip: rect(29px, 9999px, 84px, 0); }
+  100% { clip: rect(22px, 9999px, 67px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip: rect(129px, 9999px, 36px, 0); }
+  10% { clip: rect(36px, 9999px, 4px, 0); }
+  20% { clip: rect(85px, 9999px, 66px, 0); }
+  30% { clip: rect(91px, 9999px, 91px, 0); }
+  40% { clip: rect(148px, 9999px, 138px, 0); }
+  50% { clip: rect(38px, 9999px, 122px, 0); }
+  60% { clip: rect(69px, 9999px, 54px, 0); }
+  70% { clip: rect(98px, 9999px, 71px, 0); }
+  80% { clip: rect(146px, 9999px, 34px, 0); }
+  90% { clip: rect(134px, 9999px, 43px, 0); }
+  100% { clip: rect(11px, 9999px, 119px, 0); }
+}
+
+@keyframes pixel-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes scanline-sweep {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+/* Utility Classes for Animations */
+.animate-pixel-blink {
+  animation: pixel-blink 1s steps(1) infinite;
+}
+
+.animate-scanline {
+  animation: scanline-sweep 3s linear infinite;
+}
+
+/* Print Styles */
+@media print {
+  .scanlines::before,
+  .grid-overlay,
+  .dither-pattern,
+  .checkerboard {
+    display: none;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
