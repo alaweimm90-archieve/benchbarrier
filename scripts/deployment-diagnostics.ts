@@ -11,7 +11,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
-import * as os from 'os';
+import { userInfo, hostname, networkInterfaces } from 'os';
 
 // ANSI color codes
 const colors = {
@@ -64,7 +64,7 @@ class DeploymentInvestigator {
         domain,
         platform,
         timestamp: new Date(),
-        investigator: `${os.userInfo().username}@${os.hostname()}`,
+        investigator: `${userInfo().username}@${hostname()}`,
       },
       results: [],
       recommendations: [],
@@ -89,8 +89,14 @@ class DeploymentInvestigator {
   private execCommand(command: string): string {
     try {
       return execSync(command, { encoding: 'utf8', stdio: 'pipe' });
-    } catch (error: any) {
-      return error.stdout || error.message || 'Command failed';
+    } catch (error) {
+      if (error instanceof Error && 'stdout' in error) {
+        return (error as { stdout?: string }).stdout || error.message;
+      }
+      if (error instanceof Error) {
+        return error.message;
+      }
+      return 'Command failed';
     }
   }
 
@@ -104,6 +110,29 @@ class DeploymentInvestigator {
     } catch {
       return '';
     }
+  }
+
+  private findFiles(dir: string, filenames: string[]): string[] {
+    const results: string[] = [];
+    
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        
+        if (entry.isDirectory()) {
+          // Recursively search subdirectories
+          results.push(...this.findFiles(fullPath, filenames));
+        } else if (entry.isFile() && filenames.includes(entry.name)) {
+          results.push(fullPath);
+        }
+      }
+    } catch {
+      // Directory doesn't exist or can't be read
+    }
+    
+    return results;
   }
 
   private addCheck(phase: string, check: Check): void {
@@ -319,7 +348,7 @@ class DeploymentInvestigator {
     }
 
     // Check network interfaces
-    const interfaces = os.networkInterfaces();
+    const interfaces = networkInterfaces();
     const hasNetwork = Object.values(interfaces).some(addrs => 
       addrs?.some(addr => !addr.internal)
     );
@@ -368,15 +397,16 @@ class DeploymentInvestigator {
     const commonPorts = [3000, 8080, 80, 443];
     commonPorts.forEach(port => {
       try {
-        const result = this.execCommand(`nc -z localhost ${port} 2>&1`);
-        if (result.includes('succeeded') || !result.includes('refused')) {
-          this.addCheck(phase, {
-            name: `Port ${port}`,
-            status: 'success',
-            message: `Port ${port} is listening`,
-          });
-        }
+        // nc returns 0 on success, non-zero on failure
+        this.execCommand(`nc -z localhost ${port} 2>&1`);
+        // If we get here without exception, port is open
+        this.addCheck(phase, {
+          name: `Port ${port}`,
+          status: 'success',
+          message: `Port ${port} is listening`,
+        });
       } catch {
+        // Command failed, port is not listening
         this.addCheck(phase, {
           name: `Port ${port}`,
           status: 'info',
@@ -562,14 +592,23 @@ class DeploymentInvestigator {
 
     // Check for app structure
     if (this.fileExists('app')) {
-      const appDir = path.join(process.cwd(), 'app');
-      const routes = this.execCommand(`find ${appDir} -name "page.tsx" -o -name "page.js" | wc -l`).trim();
-      
-      this.addCheck(phase, {
-        name: 'Application Structure',
-        status: 'success',
-        message: `Next.js App Router with ${routes} route(s)`,
-      });
+      try {
+        const appDir = path.join(process.cwd(), 'app');
+        // Use Node.js fs methods instead of shell commands for safety
+        const files = this.findFiles(appDir, ['page.tsx', 'page.js']);
+        
+        this.addCheck(phase, {
+          name: 'Application Structure',
+          status: 'success',
+          message: `Next.js App Router with ${files.length} route(s)`,
+        });
+      } catch {
+        this.addCheck(phase, {
+          name: 'Application Structure',
+          status: 'info',
+          message: 'Unable to count routes',
+        });
+      }
     } else if (this.fileExists('pages')) {
       this.addCheck(phase, {
         name: 'Application Structure',
@@ -580,14 +619,22 @@ class DeploymentInvestigator {
 
     // Check for API routes
     if (this.fileExists('app/api')) {
-      const apiDir = path.join(process.cwd(), 'app/api');
-      const apiRoutes = this.execCommand(`find ${apiDir} -name "route.ts" -o -name "route.js" | wc -l`).trim();
-      
-      this.addCheck(phase, {
-        name: 'API Routes',
-        status: 'success',
-        message: `${apiRoutes} API route(s) found`,
-      });
+      try {
+        const apiDir = path.join(process.cwd(), 'app/api');
+        const apiFiles = this.findFiles(apiDir, ['route.ts', 'route.js']);
+        
+        this.addCheck(phase, {
+          name: 'API Routes',
+          status: 'success',
+          message: `${apiFiles.length} API route(s) found`,
+        });
+      } catch {
+        this.addCheck(phase, {
+          name: 'API Routes',
+          status: 'info',
+          message: 'Unable to count API routes',
+        });
+      }
     }
 
     // Check ESLint

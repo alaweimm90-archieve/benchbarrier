@@ -4,7 +4,8 @@
 # Version: 1.0.0
 # Description: Military-grade investigation script for diagnosing deployment issues
 
-set -e
+# Note: Not using 'set -e' to allow script to continue even if individual checks fail
+# This ensures we get a complete report even if some commands fail
 
 # Color codes for output
 RED='\033[0;31m'
@@ -123,9 +124,9 @@ phase1_deployment_verification() {
     # Check package.json
     if [ -f package.json ]; then
         log_success "package.json found"
-        log_command "cat package.json | jq -r '.name, .version, .scripts'"
+        log_command "jq -r '{name, version, scripts}' package.json"
         if command -v jq &> /dev/null; then
-            PKG_INFO=$(cat package.json | jq -r '{name, version, scripts}' 2>&1 || echo "Failed to parse package.json")
+            PKG_INFO=$(jq -r '{name, version, scripts}' package.json 2>&1 || echo "Failed to parse package.json")
             log_output "$PKG_INFO"
         else
             log_warning "jq not installed, showing raw package.json excerpt"
@@ -151,8 +152,8 @@ phase1_deployment_verification() {
     # Check if node_modules exists
     if [ -d node_modules ]; then
         log_success "node_modules directory exists"
-        MODULE_COUNT=$(find node_modules -maxdepth 1 -type d | wc -l)
-        log_info "node_modules contains $MODULE_COUNT directories"
+        MODULE_COUNT=$(find node_modules -maxdepth 1 -mindepth 1 -type d 2>/dev/null | wc -l)
+        log_info "node_modules contains $MODULE_COUNT packages"
     else
         log_error "node_modules directory not found - dependencies not installed"
     fi
