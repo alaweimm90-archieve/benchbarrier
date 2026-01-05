@@ -1,0 +1,235 @@
+name: Post-Deployment Investigation
+
+# This workflow runs the deployment investigation tool after successful deployments
+# to catch issues early and generate diagnostic reports
+
+on:
+  # Run after deployment status updates
+  deployment_status:
+  
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      domain:
+        description: 'Domain to investigate'
+        required: false
+        default: 'localhost:3000'
+      platform:
+        description: 'Platform type'
+        required: false
+        default: 'vercel'
+        type: choice
+        options:
+          - vercel
+          - netlify
+          - docker
+          - kubernetes
+
+jobs:
+  investigate-deployment:
+    name: Run Deployment Investigation
+    runs-on: ubuntu-latest
+    
+    # Only run if deployment succeeded
+    if: github.event_name == 'workflow_dispatch' || github.event.deployment_status.state == 'success'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Make investigation script executable
+        run: chmod +x scripts/deployment-investigation.sh
+      
+      - name: Run deployment investigation
+        id: investigate
+        env:
+          DOMAIN: ${{ github.event.inputs.domain || secrets.PRODUCTION_URL || 'localhost:3000' }}
+          PLATFORM: ${{ github.event.inputs.platform || 'vercel' }}
+        run: |
+          ./scripts/deployment-investigation.sh "$DOMAIN" "$PLATFORM"
+          
+          # Store report path for later steps
+          REPORT_FILE=$(ls -t deployment-investigation-reports/*.md | head -1)
+          echo "report_file=$REPORT_FILE" >> $GITHUB_OUTPUT
+      
+      - name: Upload investigation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-investigation-report-${{ github.run_number }}
+          path: deployment-investigation-reports/
+          retention-days: 30
+      
+      - name: Check for critical issues
+        id: check_issues
+        run: |
+          REPORT_FILE="${{ steps.investigate.outputs.report_file }}"
+          
+          # Count critical errors
+          ERROR_COUNT=$(grep -c "❌" "$REPORT_FILE" || echo "0")
+          WARNING_COUNT=$(grep -c "⚠️" "$REPORT_FILE" || echo "0")
+          
+          echo "errors=$ERROR_COUNT" >> $GITHUB_OUTPUT
+          echo "warnings=$WARNING_COUNT" >> $GITHUB_OUTPUT
+          
+          echo "Found $ERROR_COUNT error(s) and $WARNING_COUNT warning(s)"
+          
+          # Fail if critical errors found
+          if [ "$ERROR_COUNT" -gt 5 ]; then
+            echo "::error::Critical deployment issues detected!"
+            exit 1
+          fi
+      
+      - name: Comment on PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reportFile = '${{ steps.investigate.outputs.report_file }}';
+            const report = fs.readFileSync(reportFile, 'utf8');
+            const errors = ${{ steps.check_issues.outputs.errors }};
+            const warnings = ${{ steps.check_issues.outputs.warnings }};
+            
+            // Extract first 2000 characters of report
+            const reportPreview = report.substring(0, 2000);
+            
+            const body = `## 🔍 Deployment Investigation Report
+            
+            **Status:** ${errors > 5 ? '❌ Critical Issues Found' : warnings > 0 ? '⚠️ Warnings Found' : '✅ No Issues'}
+            **Errors:** ${errors}
+            **Warnings:** ${warnings}
+            
+            <details>
+            <summary>Report Preview (click to expand)</summary>
+            
+            ${reportPreview}
+            
+            ...
+            
+            _Full report available in workflow artifacts_
+            </details>
+            
+            [Download Full Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            `;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body
+            });
+      
+      - name: Create issue on critical failure
+        if: failure() && steps.check_issues.outputs.errors > 5
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const errors = ${{ steps.check_issues.outputs.errors }};
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Critical Deployment Issues Detected',
+              body: `## Deployment Investigation Alert
+              
+              The post-deployment investigation has detected **${errors} critical errors**.
+              
+              **Workflow Run:** https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+              **Domain:** ${{ env.DOMAIN }}
+              **Platform:** ${{ env.PLATFORM }}
+              **Triggered by:** ${{ github.actor }}
+              
+              ### Immediate Actions Required
+              
+              1. Review the investigation report in the workflow artifacts
+              2. Check all ❌ marked items
+              3. Verify environment variables are set correctly
+              4. Ensure build completed successfully
+              5. Test database connectivity
+              
+              ### Investigation Report
+              
+              Download the full report from the workflow artifacts to see detailed findings.
+              
+              cc: @${{ github.actor }}
+              `,
+              labels: ['bug', 'deployment', 'critical']
+            });
+      
+      - name: Post to Slack on failure
+        if: failure() && steps.check_issues.outputs.errors > 5
+        # Requires SLACK_WEBHOOK_URL secret
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -n "$SLACK_WEBHOOK_URL" ]; then
+            curl -X POST "$SLACK_WEBHOOK_URL" \
+              -H 'Content-Type: application/json' \
+              -d '{
+                "text": "🚨 *Critical Deployment Issues Detected*",
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "*Deployment Investigation Alert*\n\nCritical issues found: ${{ steps.check_issues.outputs.errors }} errors\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Report>"
+                    }
+                  }
+                ]
+              }'
+          fi
+
+  # Optional: Run on schedule for periodic health checks
+  scheduled-health-check:
+    name: Scheduled Health Check
+    runs-on: ubuntu-latest
+    
+    # Run daily at 2 AM UTC (adjust as needed)
+    # Uncomment the schedule trigger at the top to enable
+    if: github.event_name == 'schedule'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run health check investigation
+        run: |
+          chmod +x scripts/deployment-investigation.sh
+          ./scripts/deployment-investigation.sh ${{ secrets.PRODUCTION_URL }} vercel
+      
+      - name: Upload health check report
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-check-${{ github.run_number }}
+          path: deployment-investigation-reports/
+          retention-days: 7
+      
+      - name: Alert on health check failures
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '⚠️ Scheduled Health Check Failed',
+              body: `The daily health check has detected issues.\n\nView the report: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}`,
+              labels: ['health-check', 'monitoring']
+            });
