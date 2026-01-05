@@ -58,6 +58,27 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  // Idempotency check - prevent duplicate processing
+  const supabase = getServiceSupabase()
+  const { data: existingEvent } = await supabase
+    .from('webhook_events')
+    .select('id, processed_at')
+    .eq('stripe_event_id', event.id)
+    .single()
+
+  if (existingEvent) {
+    console.log('Event already processed:', event.id)
+    return NextResponse.json({ received: true, cached: true })
+  }
+
+  // Record event for idempotency
+  await supabase.from('webhook_events').insert({
+    stripe_event_id: event.id,
+    event_type: event.type,
+    processed_at: new Date().toISOString(),
+    payload: event.data.object,
+  })
+
   // Handle the event
   try {
     switch (event.type) {
@@ -127,6 +148,45 @@ export async function POST(request: NextRequest) {
         }
 
         console.log('Order saved successfully:', order.id)
+
+        // Send order confirmation email
+        try {
+          const { sendOrderConfirmation } = await import('@/lib/email/service')
+          
+          await sendOrderConfirmation(session.customer_details?.email || '', {
+            orderNumber: order.id,
+            customerName: session.customer_details?.name || 'Customer',
+            items: lineItems.data.map((item) => {
+              const product = item.price?.product as Stripe.Product
+              return {
+                name: item.description || product?.name || 'Product',
+                quantity: item.quantity || 1,
+                price: item.price?.unit_amount || 0,
+              }
+            }),
+            subtotal: session.amount_subtotal || 0,
+            tax: (session.total_details?.amount_tax || 0),
+            shipping: (session.total_details?.amount_shipping || 0),
+            total: session.amount_total || 0,
+            shippingAddress: (session as any).shipping_details?.address
+              ? {
+                  name: (session as any).shipping_details.name,
+                  line1: (session as any).shipping_details.address.line1,
+                  line2: (session as any).shipping_details.address.line2,
+                  city: (session as any).shipping_details.address.city,
+                  state: (session as any).shipping_details.address.state,
+                  postal_code: (session as any).shipping_details.address.postal_code,
+                  country: (session as any).shipping_details.address.country,
+                }
+              : undefined,
+          })
+          
+          console.log('Order confirmation email sent')
+        } catch (emailError) {
+          console.error('Failed to send order confirmation email:', emailError)
+          // Don't fail the webhook if email fails
+        }
+
         break
       }
 

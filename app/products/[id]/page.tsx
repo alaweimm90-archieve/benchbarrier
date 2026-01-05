@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { getProductById, products } from '@/lib/products'
 import { AddToCartButton } from '@/components/add-to-cart-button'
 import { ProductCard } from '@/components/product-card'
+import { ProductReviews } from '@/components/product-reviews'
 import {
   BrutalistContainer,
   BrutalistSection,
@@ -269,9 +270,30 @@ export default function ProductPage({ params }: ProductPageProps) {
         </BrutalistContainer>
       </BrutalistSection>
 
+      {/* Customer Reviews */}
+      <BrutalistSection className="py-16 border-t-2 border-stone-800">
+        <BrutalistContainer>
+          <div className="text-center mb-12">
+            <div className="inline-block mb-4">
+              <span className="pixel-badge-primary">
+                ■ REVIEWS ■
+              </span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-tighter text-stone-50 mb-4">
+              Customer
+              <br />
+              <span className="text-blue-500">Reviews</span>
+            </h2>
+            <BrutalistDivider thickness="thick" className="max-w-xs mx-auto" />
+          </div>
+
+          <ProductReviews productId={product.id} />
+        </BrutalistContainer>
+      </BrutalistSection>
+
       {/* Related Products */}
       {relatedProducts.length > 0 && (
-        <BrutalistSection className="py-16">
+        <BrutalistSection className="py-16 border-t-2 border-stone-800">
           <BrutalistContainer>
             <div className="text-center mb-12">
               <div className="inline-block mb-4">
