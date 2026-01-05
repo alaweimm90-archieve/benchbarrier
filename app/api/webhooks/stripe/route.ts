@@ -1,16 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { getStripe } from '@/lib/stripe'
 
-// Lazy load stripe and supabase to avoid build-time errors
-function getStripe() {
-  if (!process.env.STRIPE_SECRET_KEY) {
-    throw new Error('STRIPE_SECRET_KEY is not defined')
-  }
-  return new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: '2025-12-15.clover',
-  })
-}
-
+// Lazy load supabase to avoid build-time errors
 function getServiceSupabase() {
   const { createClient } = require('@supabase/supabase-js')
   

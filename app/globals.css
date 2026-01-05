@@ -1,5 +1,6 @@
-/* Font imports must come first */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+/* Font imports - optional, falls back to system monospace */
+/* Removed direct Google Fonts import for build reliability */
+/* If needed, load via link tag in production with proper error handling */
 
 @tailwind base;
 @tailwind components;
