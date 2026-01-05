@@ -8,7 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "investigate": "bash scripts/deployment-investigation.sh",
+    "investigate:production": "bash scripts/deployment-investigation.sh benchbarrier.vercel.app vercel",
+    "investigate:ts": "tsx scripts/deployment-diagnostics.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
