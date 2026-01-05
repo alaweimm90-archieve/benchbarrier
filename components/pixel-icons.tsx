@@ -368,6 +368,27 @@ export function DownloadIcon({ className = '', size = 16 }: IconProps) {
   )
 }
 
+// Trash Icon (16x16)
+export function TrashIcon({ className = '', size = 16 }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`pixel-perfect ${className}`}
+      style={{ imageRendering: 'pixelated' }}
+    >
+      <rect x="5" y="2" width="6" height="2" fill="currentColor" />
+      <rect x="3" y="4" width="10" height="2" fill="currentColor" />
+      <rect x="4" y="6" width="8" height="8" stroke="currentColor" strokeWidth="2" fill="none" />
+      <rect x="6" y="8" width="2" height="4" fill="currentColor" />
+      <rect x="9" y="8" width="2" height="4" fill="currentColor" />
+    </svg>
+  )
+}
+
 // Pixel Logo Component (24x24)
 export function PixelLogo({ className = '', size = 24 }: IconProps) {
   return (

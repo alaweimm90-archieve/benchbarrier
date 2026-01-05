@@ -1,22 +1,32 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { Product } from '@/lib/products'
 import { useCart } from '@/lib/cart-context'
 
 interface ProductCardProps {
-  product: Product
+  product: Product & { price: number } // price can be in cents or dollars
 }
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart()
 
-  const handleAddToCart = () => {
-    addToCart(product)
+  // Normalize price to cents if it's in dollars
+  const priceInCents = product.price < 1000 ? Math.round(product.price * 100) : product.price
+  const displayPrice = priceInCents / 100
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    addToCart({
+      ...product,
+      price: priceInCents
+    })
   }
 
   return (
-    <div className="card-brutalist group">
+    <Link href={`/products/${product.id}`} className="card-brutalist group block">
       {/* Product Image */}
       <div className="relative aspect-square bg-stone-800 border-2 border-stone-700 mb-4 overflow-hidden">
         <Image
@@ -37,7 +47,7 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Product Info */}
       <div className="space-y-3">
         <div>
-          <h3 className="text-stone-50 font-bold uppercase text-lg tracking-tight">
+          <h3 className="text-stone-50 font-bold uppercase text-lg tracking-tight group-hover:text-blue-500 transition-colors">
             {product.name}
           </h3>
           <p className="text-stone-400 text-xs uppercase mt-1">
@@ -58,17 +68,17 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Price and CTA */}
         <div className="flex items-center justify-between pt-4 border-t-2 border-stone-800">
           <span className="text-blue-500 font-bold text-xl uppercase">
-            ${product.price.toFixed(2)}
+            ${displayPrice.toFixed(2)}
           </span>
           <button
             onClick={handleAddToCart}
             disabled={!product.inStock}
-            className="btn-brutalist text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-brutalist text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-brutalist-blue transition-all"
           >
             Add to Cart
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }

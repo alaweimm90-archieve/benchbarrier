@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useCart } from '@/lib/cart-context'
 import { CartIcon, MenuIcon, CloseIcon, PixelLogo } from '@/components/pixel-icons'
+import { CartDrawer } from '@/components/cart-drawer'
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isCartOpen, setIsCartOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const { cartCount } = useCart()
@@ -86,8 +88,8 @@ export function Navbar() {
             </Link>
             
             {/* Cart Button with Pixel Icon */}
-            <Link
-              href="/cart"
+            <button
+              onClick={() => setIsCartOpen(true)}
               className="relative ml-4 px-4 py-2 bg-blue-500 text-stone-950 hover:bg-stone-950 hover:text-blue-500 border-2 border-blue-500 uppercase text-sm font-bold transition-all duration-200 group"
             >
               <span className="flex items-center gap-2">
@@ -100,7 +102,7 @@ export function Navbar() {
                 </span>
               )}
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity shadow-brutalist-blue pointer-events-none" />
-            </Link>
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -161,10 +163,12 @@ export function Navbar() {
             
             {/* Mobile Cart */}
             <div className="pt-4 border-t-2 border-stone-800 mt-4">
-              <Link
-                href="/cart"
-                onClick={closeMenu}
-                className="block px-4 py-3 bg-blue-500 text-stone-950 hover:bg-stone-950 hover:text-blue-500 border-2 border-blue-500 uppercase text-sm font-bold transition-all text-center"
+              <button
+                onClick={() => {
+                  closeMenu()
+                  setIsCartOpen(true)
+                }}
+                className="block w-full px-4 py-3 bg-blue-500 text-stone-950 hover:bg-stone-950 hover:text-blue-500 border-2 border-blue-500 uppercase text-sm font-bold transition-all text-center"
               >
                 <span className="flex items-center justify-center gap-2">
                   <CartIcon size={16} />
@@ -175,7 +179,7 @@ export function Navbar() {
                     </span>
                   )}
                 </span>
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -185,6 +189,9 @@ export function Navbar() {
       <div className={`h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent transition-opacity duration-300 ${
         isScrolled ? 'opacity-100' : 'opacity-0'
       }`} />
+
+      {/* Cart Drawer */}
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </nav>
   )
 }
