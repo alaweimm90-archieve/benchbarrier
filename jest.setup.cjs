@@ -3,7 +3,7 @@
  * Runs before each test file
  */
 
-import '@testing-library/jest-dom';
+require('@testing-library/jest-dom');
 
 // Mock Next.js router
 jest.mock('next/navigation', () => ({
@@ -67,7 +67,7 @@ const localStorageMock = {
   removeItem: jest.fn(),
   clear: jest.fn(),
 };
-global.localStorage = localStorageMock as any;
+global.localStorage = localStorageMock;
 
 // Suppress console errors in tests (optional)
 global.console = {

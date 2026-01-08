@@ -875,4 +875,5 @@ if (require.main === module) {
   investigator.investigate().catch(console.error);
 }
 
-export { DeploymentInvestigator, DiagnosticResult, Check, InvestigationReport };
+export { DeploymentInvestigator };
+export type { DiagnosticResult, Check, InvestigationReport };

@@ -140,7 +140,47 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 | Team Bundle - 5 Covers | $199.99 | prod_TjR27zz2qyZCIt |
 | Premium Protection Package | $299.99 | prod_TjR3qFxTiFQg7r |
 
-## 🧪 Testing
+## 🧪 Testing & Quality Assurance
+
+### Automated Testing
+
+```bash
+# Run unit tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Type checking
+npm run type-check
+
+# Linting
+npm run lint
+```
+
+### Test Coverage Goals
+- **Current**: 70% coverage across lib/ and components/
+- **Target**: 85% coverage for production code
+- **Critical paths**: 90%+ (checkout, payments, cart operations)
+
+### CI/CD Pipeline
+
+**Automated Checks on Every PR:**
+- ✅ ESLint code quality checks
+- ✅ TypeScript type checking
+- ✅ Unit and integration tests
+- ✅ Security vulnerability scanning (CodeQL, Snyk, npm audit)
+- ✅ Secret scanning (TruffleHog)
+- ✅ Build verification
+- ✅ Performance testing with Lighthouse CI
+
+**Deployment:**
+- Automatic preview deployments for PRs
+- Production deployment on merge to main
+- See `.github/workflows/` for full pipeline configuration
 
 ### Test Stripe Checkout
 
@@ -155,22 +195,17 @@ CVC: Any 3 digits
 Expiry: Any future date
 ```
 
-### Run Tests
-
-```bash
-npm run build        # Build for production
-npm run type-check   # TypeScript validation
-npm run lint         # ESLint
-```
-
 ## 📝 NPM Scripts
 
 ```bash
-npm run dev          # Start development server (port 3000)
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run type-check   # Run TypeScript compiler
+npm run dev              # Start development server (port 3000)
+npm run build            # Build for production
+npm run start            # Start production server
+npm run lint             # Run ESLint
+npm run type-check       # Run TypeScript compiler
+npm test                 # Run Jest tests
+npm run test:watch       # Run tests in watch mode
+npm run test:coverage    # Run tests with coverage report
 ```
 
 ## 🚀 Deployment
@@ -217,14 +252,28 @@ Contrast: HIGH (WCAG AAA)
 
 ## 📚 Documentation
 
+### Core Documentation
+- **`README.md`** - This file - Project overview and quick start
+- **`ARCHITECTURE.md`** - System architecture and design patterns
+- **`CONTRIBUTING.md`** - 🆕 Development guidelines, coding standards, and contribution workflow
+- **`CODE_OF_CONDUCT.md`** - 🆕 Community guidelines and code of conduct
+- **`SECURITY.md`** - 🆕 Security policies, vulnerability reporting, and best practices
+
+### Configuration & Deployment
 - **`QUICK_REFERENCE.md`** - Quick reference card with API keys and commands
 - **`CONFIGURATION_GUIDE.md`** - Complete Supabase and Stripe setup
 - **`DEPLOYMENT_GUIDE.md`** - Deployment instructions for Vercel
-- **`PROJECT_SUMMARY.md`** - Detailed feature list and architecture
-- **`IMPLEMENTATION_COMPLETE.md`** - Implementation checklist
-- **`docs/DEPLOYMENT_INVESTIGATION.md`** - 🔍 **NEW!** Comprehensive deployment diagnostic tool
+- **`docs/DEPLOYMENT_INVESTIGATION.md`** - Comprehensive deployment diagnostic tool
 - **`docs/DEPLOYMENT_INVESTIGATION_USAGE.md`** - Quick start guide for investigation tool
-- **`docs/DEPLOYMENT_INVESTIGATION_QUICK_REFERENCE.md`** - Quick reference for common issues
+
+### Development & Code Quality
+- **`docs/REFACTORING_PRIORITIES.md`** - 🆕 Code refactoring priorities and patterns
+- **`docs/TOKEN_CENTRALIZATION.md`** - 🆕 API token management and security strategy
+
+### Future Features & Planning
+- **`docs/SOCIAL_MEDIA_SYSTEM.md`** - 🆕 Social media management system technical specification
+- **`docs/BACKEND_AUTOMATION.md`** - 🆕 Backend automation and AI infrastructure design
+- **`PROJECT_SUMMARY.md`** - Detailed feature list and current implementation status
 
 ## 🔒 Security
 
@@ -233,6 +282,10 @@ Contrast: HIGH (WCAG AAA)
 - ✅ Supabase Row Level Security (RLS)
 - ✅ Client-side cart validation
 - ✅ HTTPS enforced in production
+- ✅ **NEW:** Automated security vulnerability scanning (CodeQL, Snyk, npm audit)
+- ✅ **NEW:** Secret scanning with TruffleHog
+- ✅ **NEW:** Comprehensive security policies documented in SECURITY.md
+- ✅ **NEW:** Token rotation and centralization strategy
 
 ## 🐛 Troubleshooting
 
