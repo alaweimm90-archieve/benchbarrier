@@ -9,9 +9,9 @@
     "start": "next start",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0",
     "type-check": "tsc --noEmit",
-    "test": "jest --watch",
-    "test:ci": "jest --ci --coverage",
-    "test:coverage": "jest --coverage"
+    "investigate": "bash scripts/deployment-investigation.sh",
+    "investigate:production": "bash scripts/deployment-investigation.sh benchbarrier.vercel.app vercel",
+    "investigate:ts": "tsx scripts/deployment-diagnostics.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -92,6 +92,7 @@
     "lovable-tagger": "^1.1.9",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.7.0",
     "typescript": "^5.9.3",
     "web-vitals": "^5.1.0"
   }

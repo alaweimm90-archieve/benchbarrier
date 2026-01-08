@@ -222,6 +222,9 @@ Contrast: HIGH (WCAG AAA)
 - **`DEPLOYMENT_GUIDE.md`** - Deployment instructions for Vercel
 - **`PROJECT_SUMMARY.md`** - Detailed feature list and architecture
 - **`IMPLEMENTATION_COMPLETE.md`** - Implementation checklist
+- **`docs/DEPLOYMENT_INVESTIGATION.md`** - 🔍 **NEW!** Comprehensive deployment diagnostic tool
+- **`docs/DEPLOYMENT_INVESTIGATION_USAGE.md`** - Quick start guide for investigation tool
+- **`docs/DEPLOYMENT_INVESTIGATION_QUICK_REFERENCE.md`** - Quick reference for common issues
 
 ## 🔒 Security
 
@@ -232,6 +235,35 @@ Contrast: HIGH (WCAG AAA)
 - ✅ HTTPS enforced in production
 
 ## 🐛 Troubleshooting
+
+### Deployment Issues? Use Our Investigation Tool! 🔍
+
+If your site deploys successfully but doesn't work, run our comprehensive diagnostic tool:
+
+```bash
+# Quick investigation
+npm run investigate
+
+# Production site investigation
+npm run investigate:production
+
+# Custom domain/platform
+./scripts/deployment-investigation.sh yourdomain.com vercel
+```
+
+The tool checks 10 critical areas:
+- ✅ Deployment verification & build artifacts
+- ✅ Network connectivity & DNS
+- ✅ Application runtime & processes
+- ✅ Database & data layer
+- ✅ Infrastructure & platform config
+- ✅ Frontend & static assets
+- ✅ Configuration & code structure
+- ✅ Monitoring & observability
+- ✅ Security & access control
+- ✅ Dependencies & vulnerabilities
+
+**Full documentation:** `docs/DEPLOYMENT_INVESTIGATION.md`
 
 ### Build Errors
 

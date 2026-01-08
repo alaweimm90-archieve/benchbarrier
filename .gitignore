@@ -37,3 +37,6 @@ build/
 
 # TypeScript build cache
 *.tsbuildinfo
+
+# Deployment investigation reports
+deployment-investigation-reports/
