@@ -1,0 +1,185 @@
+name: Security Vulnerability Scan
+
+on:
+  schedule:
+    # Run every day at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  dependency-scan:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run npm audit
+        run: npm audit --json > audit-report.json
+        continue-on-error: true
+        
+      - name: Parse audit results
+        run: |
+          if [ -f audit-report.json ]; then
+            CRITICAL=$(jq '.metadata.vulnerabilities.critical' audit-report.json)
+            HIGH=$(jq '.metadata.vulnerabilities.high' audit-report.json)
+            
+            echo "Critical vulnerabilities: $CRITICAL"
+            echo "High vulnerabilities: $HIGH"
+            
+            if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+              echo "::error::Found $CRITICAL critical and $HIGH high severity vulnerabilities"
+              exit 1
+            fi
+          fi
+          
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: npm-audit-report
+          path: audit-report.json
+          
+  snyk-scan:
+    name: Snyk Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/node@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high --json-file-output=snyk-report.json
+          
+      - name: Upload Snyk report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: snyk-report
+          path: snyk-report.json
+
+  codeql-scan:
+    name: CodeQL Security Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript, typescript
+          queries: security-extended
+          
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+        
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript"
+
+  secret-scan:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+
+  docker-scan:
+    name: Docker Image Scan
+    runs-on: ubuntu-latest
+    if: false  # Enable when Docker is used
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Build Docker image
+        run: docker build -t benchbarrier:latest .
+        
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'benchbarrier:latest'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  notification:
+    name: Send Security Notifications
+    runs-on: ubuntu-latest
+    needs: [dependency-scan, snyk-scan, codeql-scan, secret-scan]
+    if: failure()
+    
+    steps:
+      - name: Create issue for security vulnerabilities
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '🔒 Security Vulnerability Detected';
+            const body = `
+            ## Security Scan Alert
+            
+            A security vulnerability scan has detected issues in the codebase.
+            
+            **Scan Date**: ${new Date().toISOString()}
+            **Workflow Run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            Please review the scan results and take appropriate action.
+            
+            ### Next Steps
+            1. Review the detailed scan results
+            2. Assess the severity and impact
+            3. Plan remediation
+            4. Update dependencies or code as needed
+            5. Re-run security scan to verify fixes
+            
+            ---
+            *This issue was automatically created by the Security Vulnerability Scan workflow.*
+            `;
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['security', 'automated']
+            });
