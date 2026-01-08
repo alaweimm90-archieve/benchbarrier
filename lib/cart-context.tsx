@@ -42,8 +42,42 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (isClient) {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart))
+      
+      // Track abandoned cart if cart has items
+      if (cart.length > 0) {
+        trackAbandonedCart()
+      }
     }
   }, [cart, isClient])
+
+  // Track abandoned cart
+  const trackAbandonedCart = async () => {
+    try {
+      const email = localStorage.getItem('customer_email')
+      const name = localStorage.getItem('customer_name')
+      
+      if (email && cart.length > 0) {
+        await fetch('/api/cart/abandoned', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            name: name || 'Customer',
+            items: cart.map((item) => ({
+              id: item.id,
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity,
+              image: item.image,
+            })),
+            action: 'update',
+          }),
+        })
+      }
+    } catch (error) {
+      console.error('Failed to track abandoned cart:', error)
+    }
+  }
 
   const addToCart = (product: Product) => {
     setCart(prevCart => {
